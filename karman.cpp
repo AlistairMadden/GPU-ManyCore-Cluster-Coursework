@@ -680,10 +680,10 @@ int computeP() {
     iterations++;
   }
 
-  std::cout << "iterations n=" << iterations
-            << ", |res(n)|_2=" << globalResidual
-            << ", |res(n-1)|_2=" << previousGlobalResidual
-            << ", |res(n-1)|_2-|res(n)|_2=" << (previousGlobalResidual-globalResidual);
+  // std::cout << "iterations n=" << iterations
+  //           << ", |res(n)|_2=" << globalResidual
+  //           << ", |res(n-1)|_2=" << previousGlobalResidual
+  //           << ", |res(n-1)|_2-|res(n)|_2=" << (previousGlobalResidual-globalResidual);
 
   return iterations;
 }
@@ -1009,7 +1009,7 @@ void setVelocityBoundaryConditions(double time) {
       Fz[ getFaceIndexZ(ix,iy,iz) ] = uz[ getFaceIndexZ(ix,iy,iz) ];
       //Fx[ getFaceIndexX(ix,iy,iz) ] = uz[ getFaceIndexZ(ix,iy,iz) ];
       //Fz[ getFaceIndexZ(ix,iy,iz) ] = ux[ getFaceIndexX(ix,iy,iz) ];
-      
+
       iy=1;
       Fy[ getFaceIndexY(ix,iy,iz) ] = uy[ getFaceIndexY(ix,iy,iz) ]
                                           ;
@@ -1030,12 +1030,12 @@ void setVelocityBoundaryConditions(double time) {
     for (iy=0; iy<numberOfCellsPerAxisY+2; iy++) {
       iz=0;
       Fz[ getFaceIndexZ(ix,iy,iz) ] = uz[ getFaceIndexZ(ix,iy,iz) ];
-      
+
       Fx[ getFaceIndexX(ix,iy,iz) ] = ux[ getFaceIndexX(ix,iy,iz) ];
       Fy[ getFaceIndexY(ix,iy,iz) ] = uy[ getFaceIndexY(ix,iy,iz) ];
       //Fx[ getFaceIndexX(ix,iy,iz) ] = uy[ getFaceIndexY(ix,iy,iz) ];
       //Fy[ getFaceIndexY(ix,iy,iz) ] = ux[ getFaceIndexX(ix,iy,iz) ];
-      
+
       iz=1;
       Fz[ getFaceIndexZ(ix,iy,iz) ] = uz[ getFaceIndexZ(ix,iy,iz) ];
 
@@ -1126,9 +1126,9 @@ int main (int argc, char *argv[]) {
   double timeBetweenPlots  = atof(argv[2]);
   ReynoldsNumber           = atof(argv[3]);
 
-  std::cout << "Re=" << ReynoldsNumber << std::endl;
-
-  std::cout << "create " << numberOfCellsPerAxisX << "x" << numberOfCellsPerAxisY << "x" << numberOfCellsPerAxisZ << " grid" << std::endl;
+  // std::cout << "Re=" << ReynoldsNumber << std::endl;
+  //
+  // std::cout << "create " << numberOfCellsPerAxisX << "x" << numberOfCellsPerAxisY << "x" << numberOfCellsPerAxisZ << " grid" << std::endl;
   setupScenario();
 
   //   dt <= C Re dx^2
@@ -1139,21 +1139,21 @@ int main (int argc, char *argv[]) {
   const double MinimalTimeStepSize  = MaximumTimeStepSize / 800;
 
   timeStepSize = MaximumTimeStepSize;
-  std::cout << "start with time step size " << timeStepSize << std::endl;
+  // std::cout << "start with time step size " << timeStepSize << std::endl;
 
   setVelocityBoundaryConditions(0.0);
-  std::cout << "velocity start conditions are set";
-  if (timeBetweenPlots>0.0) {
-    plotVTKFile();
-  }
-  std::cout << std::endl;
+  // std::cout << "velocity start conditions are set";
+  // if (timeBetweenPlots>0.0) {
+  //   plotVTKFile();
+  // }
+  // std::cout << std::endl;
 
   double t = 0.0;
   double tOfLastSnapshot                       = 0.0;
   int    timeStepCounter                       = 0;
   int    numberOfTimeStepsWithOnlyOneIteration = 0;
   while (t<20.0) {
-    std::cout << "time step " << timeStepCounter << ": t=" << t << "\t dt=" << timeStepSize << "\t";
+    // std::cout << "time step " << timeStepCounter << ": t=" << t << "\t dt=" << timeStepSize << "\t";
 
     setVelocityBoundaryConditions(t);
     computeF();
@@ -1166,7 +1166,7 @@ int main (int argc, char *argv[]) {
     updateInk();
 
     if (timeBetweenPlots>0.0 && (t-tOfLastSnapshot>timeBetweenPlots)) {
-      plotVTKFile();
+      // plotVTKFile();
       tOfLastSnapshot = t;
     }
 
@@ -1183,21 +1183,21 @@ int main (int argc, char *argv[]) {
     if (numberOfTimeStepsWithOnlyOneIteration>IterationsBeforeTimeStepSizeIsAltered && timeStepSize < MaximumTimeStepSize) {
       timeStepSize *= (1.0+ChangeOfTimeStepSize);
       numberOfTimeStepsWithOnlyOneIteration = 0;
-      std::cout << "\t time step size seems to be too small. Increased to " << timeStepSize << " to speed up simulation";
+      // std::cout << "\t time step size seems to be too small. Increased to " << timeStepSize << " to speed up simulation";
     }
     else if (numberOfTimeStepsWithOnlyOneIteration<-IterationsBeforeTimeStepSizeIsAltered && timeStepSize>MinimalTimeStepSize) {
       timeStepSize /= 2.0;
       numberOfTimeStepsWithOnlyOneIteration = 0;
-      std::cout << "\t time step size seems to be too big. Reduced to " << timeStepSize << " to keep simulation stable";
+      // std::cout << "\t time step size seems to be too big. Reduced to " << timeStepSize << " to keep simulation stable";
     }
 
     t += timeStepSize;
     timeStepCounter++;
 
-    std::cout << std::endl;
+    // std::cout << std::endl;
   }
 
-  std::cout << "free data structures" << std::endl;
+  // std::cout << "free data structures" << std::endl;
   freeDataStructures();
 
   return 0;
