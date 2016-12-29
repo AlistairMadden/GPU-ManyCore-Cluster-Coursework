@@ -1197,7 +1197,7 @@ int main (int argc, char *argv[]) {
     // std::cout << std::endl;
   }
 
-  // std::cout << "free data structures" << std::endl;
+  std::cout << "free data structures" << std::endl;
   freeDataStructures();
 
   return 0;
