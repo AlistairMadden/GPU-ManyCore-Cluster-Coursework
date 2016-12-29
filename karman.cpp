@@ -1194,7 +1194,8 @@ int main (int argc, char *argv[]) {
     t += timeStepSize;
     timeStepCounter++;
 
-    // std::cout << std::endl;
+    std::cout << t;
+    std::cout << std::endl;
   }
 
   std::cout << "free data structures" << std::endl;
