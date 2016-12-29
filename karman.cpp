@@ -1139,7 +1139,7 @@ int main (int argc, char *argv[]) {
   const double MinimalTimeStepSize  = MaximumTimeStepSize / 800;
 
   timeStepSize = MaximumTimeStepSize;
-  // std::cout << "start with time step size " << timeStepSize << std::endl;
+  std::cout << "start with time step size " << timeStepSize << std::endl;
 
   setVelocityBoundaryConditions(0.0);
   // std::cout << "velocity start conditions are set";
