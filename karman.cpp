@@ -167,12 +167,6 @@ void assertion( bool condition, int line ) {
  * Maps the three coordinates onto one cell index.
  */
 int getCellIndex(int ix, int iy, int iz) {
-  assertion(ix>=0,__LINE__);
-  assertion(ix<numberOfCellsPerAxisX+2,__LINE__);
-  assertion(iy>=0,__LINE__);
-  assertion(iy<numberOfCellsPerAxisY+2,__LINE__);
-  assertion(iz>=0,__LINE__);
-  assertion(iz<numberOfCellsPerAxisZ+2,__LINE__);
   return ix+iy*(numberOfCellsPerAxisX+2)+iz*(numberOfCellsPerAxisX+2)*(numberOfCellsPerAxisY+2);
 }
 
@@ -181,12 +175,6 @@ int getCellIndex(int ix, int iy, int iz) {
  * Please note that we hold only the inner and boundary vertices.
  */
 int getVertexIndex(int ix, int iy, int iz) {
-  assertion(ix>=0,__LINE__);
-  assertion(ix<numberOfCellsPerAxisX+1,__LINE__);
-  assertion(iy>=0,__LINE__);
-  assertion(iy<numberOfCellsPerAxisY+1,__LINE__);
-  assertion(iz>=0,__LINE__);
-  assertion(iz<numberOfCellsPerAxisZ+1,__LINE__);
   return ix+iy*(numberOfCellsPerAxisX+1)+iz*(numberOfCellsPerAxisX+1)*(numberOfCellsPerAxisY+1);
 }
 
@@ -197,34 +185,16 @@ int getVertexIndex(int ix, int iy, int iz) {
  * Takes into account that there's one more face in X direction than numberOfCellsPerAxisX.
  */
 int getFaceIndexX(int ix, int iy, int iz) {
-  assertion(ix>=0,__LINE__);
-  assertion(ix<numberOfCellsPerAxisX+3,__LINE__);
-  assertion(iy>=0,__LINE__);
-  assertion(iy<numberOfCellsPerAxisY+2,__LINE__);
-  assertion(iz>=0,__LINE__);
-  assertion(iz<numberOfCellsPerAxisZ+2,__LINE__);
   return ix+iy*(numberOfCellsPerAxisX+3)+iz*(numberOfCellsPerAxisX+3)*(numberOfCellsPerAxisY+2);
 }
 
 
 int getFaceIndexY(int ix, int iy, int iz) {
-  assertion(ix>=0,__LINE__);
-  assertion(ix<numberOfCellsPerAxisX+2,__LINE__);
-  assertion(iy>=0,__LINE__);
-  assertion(iy<numberOfCellsPerAxisY+3,__LINE__);
-  assertion(iz>=0,__LINE__);
-  assertion(iz<numberOfCellsPerAxisZ+2,__LINE__);
   return ix+iy*(numberOfCellsPerAxisX+2)+iz*(numberOfCellsPerAxisX+2)*(numberOfCellsPerAxisY+2);
 }
 
 
 int getFaceIndexZ(int ix, int iy, int iz) {
-  assertion(ix>=0,__LINE__);
-  assertion(ix<numberOfCellsPerAxisX+2,__LINE__);
-  assertion(iy>=0,__LINE__);
-  assertion(iy<numberOfCellsPerAxisY+2,__LINE__);
-  assertion(iz>=0,__LINE__);
-  assertion(iz<numberOfCellsPerAxisZ+3,__LINE__);
   return ix+iy*(numberOfCellsPerAxisX+2)+iz*(numberOfCellsPerAxisX+2)*(numberOfCellsPerAxisY+2);
 }
 
