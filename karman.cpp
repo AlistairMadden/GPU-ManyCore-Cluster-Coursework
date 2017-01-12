@@ -1104,7 +1104,7 @@ int main (int argc, char *argv[]) {
   //   dt <= C Re dx^2
   // whereas the CFD lab at TUM uses
   //   const double MaximumTimeStepSize                 = 0.8 * std::min( ReynoldsNumber/2.0/(3.0/numberOfCellsPerAxisY/numberOfCellsPerAxisY), 1.0/numberOfCellsPerAxisY );
-  const double TimeStepSizeConstant = 1;
+  const double TimeStepSizeConstant = 1e-1;
   const double MaximumTimeStepSize  = TimeStepSizeConstant * ReynoldsNumber / numberOfCellsPerAxisY / numberOfCellsPerAxisY;
   const double MinimalTimeStepSize  = MaximumTimeStepSize / 800;
 
