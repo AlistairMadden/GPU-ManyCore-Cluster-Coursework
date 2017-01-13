@@ -1104,7 +1104,7 @@ int main (int argc, char *argv[]) {
   //   dt <= C Re dx^2
   // whereas the CFD lab at TUM uses
   //   const double MaximumTimeStepSize                 = 0.8 * std::min( ReynoldsNumber/2.0/(3.0/numberOfCellsPerAxisY/numberOfCellsPerAxisY), 1.0/numberOfCellsPerAxisY );
-  const double TimeStepSizeConstant = 1e-1;
+  const double TimeStepSizeConstant = 1e-4;
   const double MaximumTimeStepSize  = TimeStepSizeConstant * ReynoldsNumber / numberOfCellsPerAxisY / numberOfCellsPerAxisY;
   const double MinimalTimeStepSize  = MaximumTimeStepSize / 800;
 
@@ -1122,7 +1122,7 @@ int main (int argc, char *argv[]) {
   double tOfLastSnapshot                       = 0.0;
   int    timeStepCounter                       = 0;
   int    numberOfTimeStepsWithOnlyOneIteration = 0;
-  while (t<20.0) {
+  while (t<0.1) {
     // std::cout << "time step " << timeStepCounter << ": t=" << t << "\t dt=" << timeStepSize << "\t";
 
     setVelocityBoundaryConditions(t);
