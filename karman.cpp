@@ -1153,12 +1153,12 @@ int main (int argc, char *argv[]) {
     if (numberOfTimeStepsWithOnlyOneIteration>IterationsBeforeTimeStepSizeIsAltered && timeStepSize < MaximumTimeStepSize) {
       timeStepSize *= (1.0+ChangeOfTimeStepSize);
       numberOfTimeStepsWithOnlyOneIteration = 0;
-      // std::cout << "\t time step size seems to be too small. Increased to " << timeStepSize << " to speed up simulation";
+      std::cout << "\t time step size seems to be too small. Increased to " << timeStepSize << " to speed up simulation";
     }
     else if (numberOfTimeStepsWithOnlyOneIteration<-IterationsBeforeTimeStepSizeIsAltered && timeStepSize>MinimalTimeStepSize) {
       timeStepSize /= 2.0;
       numberOfTimeStepsWithOnlyOneIteration = 0;
-      // std::cout << "\t time step size seems to be too big. Reduced to " << timeStepSize << " to keep simulation stable";
+      std::cout << "\t time step size seems to be too big. Reduced to " << timeStepSize << " to keep simulation stable";
     }
 
     t += timeStepSize;
