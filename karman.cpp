@@ -624,7 +624,7 @@ int computeP() {
   ) {
     const double omega = iterations%2==0 ? 1.2 : 0.8;
     setPressureBoundaryConditions();
-	pnext = p;
+	*pnext = *p;
     previousGlobalResidual = globalResidual;
     globalResidual         = 0.0;
     for (int iz=1; iz<numberOfCellsPerAxisZ+1; iz++) {
@@ -649,7 +649,7 @@ int computeP() {
         }
       }
     }
-	p = pnext;
+	*p = *pnext;
     globalResidual        = std::sqrt(globalResidual);
     firstResidual         = firstResidual==0 ? globalResidual : firstResidual;
     iterations++;
@@ -760,7 +760,6 @@ void setupScenario() {
 
   for (int i=0; i<numberOfCells; i++) {
     p[i]            = 0.0;
-	pnext[i] = 0.0;
     cellIsInside[i] = true;
   }
 
