@@ -117,6 +117,7 @@ double* Fz;
  * Pressure in the cell
  */
 double* p;
+double* pnext; // for storing the newly calculated pressures
 double* rhs;
 
 /**
@@ -502,6 +503,8 @@ void computeF() {
 /**
  * Compute the right-hand side. This basically means how much a flow would
  * violate the incompressibility if there were no pressure.
+ *
+ * Don't think this one has a problem with being vectorised?
  */
 void computeRhs() {
   for (int iz=1; iz<numberOfCellsPerAxisZ+2-1; iz++) {
@@ -621,7 +624,7 @@ int computeP() {
   ) {
     const double omega = iterations%2==0 ? 1.2 : 0.8;
     setPressureBoundaryConditions();
-
+	pnext = p;
     previousGlobalResidual = globalResidual;
     globalResidual         = 0.0;
     for (int iz=1; iz<numberOfCellsPerAxisZ+1; iz++) {
@@ -640,11 +643,12 @@ int computeP() {
                 + 6.0 * p[ getCellIndex(ix,iy,iz) ]
               );
             globalResidual              += residual * residual;
-            p[ getCellIndex(ix,iy,iz) ] += -omega * residual / 6.0 * getH() * getH();
+            pnext[ getCellIndex(ix,iy,iz) ] += -omega * residual / 6.0 * getH() * getH();
           }
         }
       }
     }
+	p = pnext;
     globalResidual        = std::sqrt(globalResidual);
     firstResidual         = firstResidual==0 ? globalResidual : firstResidual;
     iterations++;
@@ -727,6 +731,7 @@ void setupScenario() {
   Fz  = new (std::nothrow) double[numberOfFacesZ];
 
   p   = new (std::nothrow) double[numberOfCells];
+  pnext = new (std::nothrow) double[numberOfCells];
   rhs = new (std::nothrow) double[numberOfCells];
 
   ink = new (std::nothrow) double[(numberOfCellsPerAxisX+1) * (numberOfCellsPerAxisY+1) * (numberOfCellsPerAxisZ+1)];
@@ -754,6 +759,7 @@ void setupScenario() {
 
   for (int i=0; i<numberOfCells; i++) {
     p[i]            = 0.0;
+	pnext[i] = 0.0;
     cellIsInside[i] = true;
   }
 
