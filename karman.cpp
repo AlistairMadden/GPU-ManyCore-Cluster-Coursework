@@ -568,6 +568,7 @@ void setPressureBoundaryConditions() {
     for (int iy=1; iy<numberOfCellsPerAxisY+1; iy++) {
       for (int ix=2; ix<numberOfCellsPerAxisX+1; ix++) {
         if (cellIsInside[getCellIndex(ix,iy,iz)]) {
+			std::cout << "x:" + ix + " y:" + iy + " z:" + iz
           if ( !cellIsInside[getCellIndex(ix-1,iy,iz)] ) { // left neighbour
             p[getCellIndex(ix-1,iy,iz)]     = p[getCellIndex(ix,iy,iz)];
           }
@@ -1122,7 +1123,7 @@ int main (int argc, char *argv[]) {
   double tOfLastSnapshot                       = 0.0;
   int    timeStepCounter                       = 0;
   int    numberOfTimeStepsWithOnlyOneIteration = 0;
-  while (t<0.1) {
+  while (t<0.01) {
     // std::cout << "time step " << timeStepCounter << ": t=" << t << "\t dt=" << timeStepSize << "\t";
 
     setVelocityBoundaryConditions(t);
