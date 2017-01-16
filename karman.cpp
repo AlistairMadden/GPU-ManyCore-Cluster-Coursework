@@ -285,7 +285,7 @@ void plotVTKFile() {
   std::cout << "\t write " << outputFileName.str();
 
   out << "# vtk DataFile Version 2.0" << std::endl
-      << "Tobias Weinzierl: CPU, Manycore and Cluster Computing" << std::endl
+      << "Alistair Madden: CPU, Manycore and Cluster Computing" << std::endl
       << "ASCII" << std::endl << std::endl;
 
   out << "DATASET STRUCTURED_POINTS" << std::endl
@@ -1119,9 +1119,9 @@ int main (int argc, char *argv[]) {
 
   setVelocityBoundaryConditions(0.0);
   // std::cout << "velocity start conditions are set";
-  // if (timeBetweenPlots>0.0) {
-  //   plotVTKFile();
-  // }
+  if (timeBetweenPlots>0.0) {
+	plotVTKFile();
+  }
   // std::cout << std::endl;
 
   double t = 0.0;
@@ -1142,7 +1142,7 @@ int main (int argc, char *argv[]) {
     updateInk();
 
     if (timeBetweenPlots>0.0 && (t-tOfLastSnapshot>timeBetweenPlots)) {
-      // plotVTKFile();
+      plotVTKFile();
       tOfLastSnapshot = t;
     }
 
