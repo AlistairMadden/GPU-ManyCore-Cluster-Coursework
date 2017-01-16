@@ -568,7 +568,7 @@ void setPressureBoundaryConditions() {
     for (int iy=1; iy<numberOfCellsPerAxisY+1; iy++) {
       for (int ix=2; ix<numberOfCellsPerAxisX+1; ix++) {
         if (cellIsInside[getCellIndex(ix,iy,iz)]) {
-			std::cout << "x:" < ix < " y:" < iy < " z:" < iz;
+			std::cout << "x:" << ix << " y:" << iy << " z:" << iz;
           if ( !cellIsInside[getCellIndex(ix-1,iy,iz)] ) { // left neighbour
             p[getCellIndex(ix-1,iy,iz)]     = p[getCellIndex(ix,iy,iz)];
           }
