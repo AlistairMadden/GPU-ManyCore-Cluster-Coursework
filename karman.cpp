@@ -408,7 +408,7 @@ void computeF() {
         if (
           cellIsInside[getCellIndex(ix-1,iy,iz)]
           &&
-          FcellIsInside[getCellIndex(ix,iy,iz)]
+          cellIsInside[getCellIndex(ix,iy,iz)]
         ) {
           const double diffusiveTerm =
             + (-1.0 * ux[ getFaceIndexX(ix-1,iy,iz) ] + 2.0 * ux[ getFaceIndexX(ix,iy,iz) ] - 1.0 * ux[ getFaceIndexX(ix+1,iy,iz) ] )
