@@ -681,9 +681,9 @@ int computeP() {
   }
 
   //std::cout << "iterations n=" << iterations
-            << ", |res(n)|_2=" << globalResidual
-            << ", |res(n-1)|_2=" << previousGlobalResidual
-            << ", |res(n-1)|_2-|res(n)|_2=" << (previousGlobalResidual-globalResidual);
+  //          << ", |res(n)|_2=" << globalResidual
+  //          << ", |res(n-1)|_2=" << previousGlobalResidual
+  //          << ", |res(n-1)|_2-|res(n)|_2=" << (previousGlobalResidual-globalResidual);
 
   return iterations;
 }
