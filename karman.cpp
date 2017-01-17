@@ -435,6 +435,7 @@ void computeF() {
 
   for (int iz=1; iz<numberOfCellsPerAxisZ+2-1; iz++) {
     for (int iy=2; iy<numberOfCellsPerAxisY+3-2; iy++) {
+      #pragma simd
       for (int ix=1; ix<numberOfCellsPerAxisX+2-1; ix++) {
         if (
           cellIsInside[getCellIndex(ix,iy-1,iz)]
@@ -467,6 +468,7 @@ void computeF() {
 
   for (int iz=2; iz<numberOfCellsPerAxisZ+3-2; iz++) {
     for (int iy=1; iy<numberOfCellsPerAxisY+2-1; iy++) {
+      #pragma simd
       for (int ix=1; ix<numberOfCellsPerAxisX+2-1; ix++) {
         if (
           cellIsInside[getCellIndex(ix,iy,iz-1)]
