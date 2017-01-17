@@ -403,6 +403,7 @@ void computeF() {
 
   for (int iz=1; iz<numberOfCellsPerAxisZ+2-1; iz++) {
     for (int iy=1; iy<numberOfCellsPerAxisY+2-1; iy++) {
+	  #pragma simd
       for (int ix=2; ix<numberOfCellsPerAxisX+3-2; ix++) {
         if (
           cellIsInside[getCellIndex(ix-1,iy,iz)]
