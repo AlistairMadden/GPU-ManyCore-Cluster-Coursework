@@ -1126,9 +1126,10 @@ int main (int argc, char *argv[]) {
   double timeBetweenPlots  = atof(argv[2]);
   ReynoldsNumber           = atof(argv[3]);
 
-  std::cout << "Re=" << ReynoldsNumber << std::endl;
+  //std::cout << "Re=" << ReynoldsNumber << std::endl;
 
-  std::cout << "create " << numberOfCellsPerAxisX << "x" << numberOfCellsPerAxisY << "x" << numberOfCellsPerAxisZ << " grid" << std::endl;
+  //may be useful later however
+  //std::cout << "create " << numberOfCellsPerAxisX << "x" << numberOfCellsPerAxisY << "x" << numberOfCellsPerAxisZ << " grid" << std::endl;
   setupScenario();
 
   //   dt <= C Re dx^2
@@ -1139,21 +1140,21 @@ int main (int argc, char *argv[]) {
   const double MinimalTimeStepSize  = MaximumTimeStepSize / 800;
 
   timeStepSize = MaximumTimeStepSize;
-  std::cout << "start with time step size " << timeStepSize << std::endl;
+  //std::cout << "start with time step size " << timeStepSize << std::endl;
 
   setVelocityBoundaryConditions(0.0);
-  std::cout << "velocity start conditions are set";
+  //std::cout << "velocity start conditions are set";
   if (timeBetweenPlots>0.0) {
     plotVTKFile();
   }
-  std::cout << std::endl;
+  //std::cout << std::endl;
 
   double t = 0.0;
   double tOfLastSnapshot                       = 0.0;
   int    timeStepCounter                       = 0;
   int    numberOfTimeStepsWithOnlyOneIteration = 0;
   while (t<20.0) {
-    std::cout << "time step " << timeStepCounter << ": t=" << t << "\t dt=" << timeStepSize << "\t";
+    //std::cout << "time step " << timeStepCounter << ": t=" << t << "\t dt=" << timeStepSize << "\t";
 
     setVelocityBoundaryConditions(t);
     computeF();
@@ -1183,21 +1184,21 @@ int main (int argc, char *argv[]) {
     if (numberOfTimeStepsWithOnlyOneIteration>IterationsBeforeTimeStepSizeIsAltered && timeStepSize < MaximumTimeStepSize) {
       timeStepSize *= (1.0+ChangeOfTimeStepSize);
       numberOfTimeStepsWithOnlyOneIteration = 0;
-      std::cout << "\t time step size seems to be too small. Increased to " << timeStepSize << " to speed up simulation";
+      //std::cout << "\t time step size seems to be too small. Increased to " << timeStepSize << " to speed up simulation";
     }
     else if (numberOfTimeStepsWithOnlyOneIteration<-IterationsBeforeTimeStepSizeIsAltered && timeStepSize>MinimalTimeStepSize) {
       timeStepSize /= 2.0;
       numberOfTimeStepsWithOnlyOneIteration = 0;
-      std::cout << "\t time step size seems to be too big. Reduced to " << timeStepSize << " to keep simulation stable";
+      //std::cout << "\t time step size seems to be too big. Reduced to " << timeStepSize << " to keep simulation stable";
     }
 
     t += timeStepSize;
     timeStepCounter++;
 
-    std::cout << std::endl;
+    //std::cout << std::endl;
   }
 
-  std::cout << "free data structures" << std::endl;
+  //std::cout << "free data structures" << std::endl;
   freeDataStructures();
 
   return 0;
