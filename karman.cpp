@@ -408,7 +408,7 @@ void computeF() {
         if (
           cellIsInside[getCellIndex(ix-1,iy,iz)]
           &&
-          cellIsInside[getCellIndex(ix,iy,iz)]
+          FcellIsInside[getCellIndex(ix,iy,iz)]
         ) {
           const double diffusiveTerm =
             + (-1.0 * ux[ getFaceIndexX(ix-1,iy,iz) ] + 2.0 * ux[ getFaceIndexX(ix,iy,iz) ] - 1.0 * ux[ getFaceIndexX(ix+1,iy,iz) ] )
@@ -632,7 +632,7 @@ int computeP() {
     globalResidual         = 0.0;
     for (int iz=1; iz<numberOfCellsPerAxisZ+1; iz++) {
       for (int iy=1; iy<numberOfCellsPerAxisY+1; iy++) {
-		#pragma simd
+		#pragma omp parallel for schedule(static)
         for (int ix=1; ix<numberOfCellsPerAxisX+1; ix++) {
           if ( cellIsInside[getCellIndex(ix,iy,iz)] ) {
             double residual = rhs[ getCellIndex(ix,iy,iz) ] +
