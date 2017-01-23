@@ -654,8 +654,10 @@ int computeP() {
 
     previousGlobalResidual = globalResidual;
     globalResidual         = 0.0;
+    residuals = new (std::nothrow) double[numberOfCellsPerAxisZ*numberOfCellsPerAxisY*numberOfCellsPerAxisX];
     for (int iz=1; iz<numberOfCellsPerAxisZ+1; iz++) {
       for (int iy=1; iy<numberOfCellsPerAxisY+1; iy++) {
+        #pragma simd
         for (int ix=1; ix<numberOfCellsPerAxisX+1; ix++) {
           if ( cellIsInside[getCellIndex(ix,iy,iz)] ) {
             double residual = rhs[ getCellIndex(ix,iy,iz) ] +
@@ -670,11 +672,24 @@ int computeP() {
                 + 6.0 * p[ getCellIndex(ix,iy,iz) ]
               );
             globalResidual              += residual * residual;
-            p[ getCellIndex(ix,iy,iz) ] += -omega * residual / 6.0 * getH() * getH();
+            p[ getCellIndex(ix,iy,iz) ] += -omega / 6.0 * getH() * getH();
+            residuals[getCellIndex(ix,iy,iz)] = residual;
           }
         }
       }
     }
+
+    for (int iz=1; iz<numberOfCellsPerAxisZ+1; iz++) {
+      for (int iy = 1; iy < numberOfCellsPerAxisY + 1; iy++) {
+        #pragma simd
+        for (int ix = 1; ix < numberOfCellsPerAxisX + 1; ix++) {
+          if (cellIsInside[getCellIndex(ix, iy, iz)]) {
+            p[getCellIndex(ix,iy,iz)] *= residuals[getCellIndex(ix,iy,iz)];
+          }
+        }
+      }
+    }
+
     globalResidual        = std::sqrt(globalResidual);
     firstResidual         = firstResidual==0 ? globalResidual : firstResidual;
     iterations++;
@@ -808,24 +823,18 @@ void setupScenario() {
   int xOffsetOfObstacle = sizeOfObstacle*2;
   if (sizeOfObstacle<2) sizeOfObstacle = 2;
   int zDelta = numberOfCellsPerAxisZ<=8 ? 0 : sizeOfObstacle/3;
-  int calculatedIndices = (numberOfCellsPerAxisZ+1-2*zDelta) * (4 + sizeOfObstacle * 3);
-  int numberOfIndices = 0;
-  for (int iz=1 + zDelta; iz<numberOfCellsPerAxisZ+2-zDelta; iz++) {
+    for (int iz=1 + zDelta; iz<numberOfCellsPerAxisZ+2-zDelta; iz++) {
     cellIsInside[ getCellIndex(xOffsetOfObstacle,    sizeOfObstacle+1,iz) ] = false;
     cellIsInside[ getCellIndex(xOffsetOfObstacle+1,  sizeOfObstacle+1,iz) ] = false;
     for (int ii=0; ii<sizeOfObstacle; ii++) {
       cellIsInside[ getCellIndex(xOffsetOfObstacle+ii,  sizeOfObstacle+ii+2,iz) ] = false;
       cellIsInside[ getCellIndex(xOffsetOfObstacle+ii+1,sizeOfObstacle+ii+2,iz) ] = false;
       cellIsInside[ getCellIndex(xOffsetOfObstacle+ii+2,sizeOfObstacle+ii+2,iz) ] = false;
-      numberOfIndices += 3;
     }
     cellIsInside[ getCellIndex(xOffsetOfObstacle+sizeOfObstacle+0,  2*sizeOfObstacle+2,iz) ] = false;
     cellIsInside[ getCellIndex(xOffsetOfObstacle+sizeOfObstacle+1,  2*sizeOfObstacle+2,iz) ] = false;
-    numberOfIndices += 4;
   }
-  std::cout << "number of indices " << calculatedIndices << std::endl;
-  std::cout << "number of indices " << numberOfIndices << std::endl;
-  std::cout << "size of obstacle " << sizeOfObstacle << std::endl;
+
   validateThatEntriesAreBounded("setupScenario()");
 }
 
