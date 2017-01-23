@@ -822,7 +822,8 @@ void setupScenario() {
     cellIsInside[ getCellIndex(xOffsetOfObstacle+sizeOfObstacle+1,  2*sizeOfObstacle+2,iz) ] = false;
     numberOfIndices += 4;
   }
-  std::cout << numberOfIndices << std::endl;
+  std::cout << "number of indices" << numberOfIndices << std::endl;
+  std::cout << "size of obstacle" << sizeOfObstacle << std::endl;
   validateThatEntriesAreBounded("setupScenario()");
 }
 
