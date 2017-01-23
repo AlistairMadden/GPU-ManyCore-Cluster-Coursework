@@ -654,7 +654,7 @@ int computeP() {
 
     previousGlobalResidual = globalResidual;
     globalResidual         = 0.0;
-    residuals = new (std::nothrow) double[numberOfCellsPerAxisZ*numberOfCellsPerAxisY*numberOfCellsPerAxisX];
+    double residuals[numberOfCellsPerAxisZ*numberOfCellsPerAxisY*numberOfCellsPerAxisX];
     for (int iz=1; iz<numberOfCellsPerAxisZ+1; iz++) {
       for (int iy=1; iy<numberOfCellsPerAxisY+1; iy++) {
         #pragma simd
