@@ -808,7 +808,7 @@ void setupScenario() {
   int xOffsetOfObstacle = sizeOfObstacle*2;
   if (sizeOfObstacle<2) sizeOfObstacle = 2;
   int zDelta = numberOfCellsPerAxisZ<=8 ? 0 : sizeOfObstacle/3;
-  int calculatedIndices = (numberOfCellsPerAxisZ+1-zDelta) * (4 + sizeOfObstacle * 3);
+  int calculatedIndices = (numberOfCellsPerAxisZ+1-2*zDelta) * (4 + sizeOfObstacle * 3);
   int numberOfIndices = 0;
   for (int iz=1 + zDelta; iz<numberOfCellsPerAxisZ+2-zDelta; iz++) {
     cellIsInside[ getCellIndex(xOffsetOfObstacle,    sizeOfObstacle+1,iz) ] = false;
