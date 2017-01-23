@@ -657,7 +657,6 @@ int computeP() {
     double residuals[numberOfCellsPerAxisZ*numberOfCellsPerAxisY*numberOfCellsPerAxisX];
     for (int iz=1; iz<numberOfCellsPerAxisZ+1; iz++) {
       for (int iy=1; iy<numberOfCellsPerAxisY+1; iy++) {
-        #pragma simd
         for (int ix=1; ix<numberOfCellsPerAxisX+1; ix++) {
           if ( cellIsInside[getCellIndex(ix,iy,iz)] ) {
             double residual = rhs[ getCellIndex(ix,iy,iz) ] +
@@ -681,7 +680,6 @@ int computeP() {
 
     for (int iz=1; iz<numberOfCellsPerAxisZ+1; iz++) {
       for (int iy = 1; iy < numberOfCellsPerAxisY + 1; iy++) {
-        #pragma simd
         for (int ix = 1; ix < numberOfCellsPerAxisX + 1; ix++) {
           if (cellIsInside[getCellIndex(ix, iy, iz)]) {
             p[getCellIndex(ix,iy,iz)] *= residuals[getCellIndex(ix,iy,iz)];
