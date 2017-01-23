@@ -654,7 +654,7 @@ int computeP() {
 
     previousGlobalResidual = globalResidual;
     globalResidual         = 0.0;
-    double residuals[numberOfCellsPerAxisZ*numberOfCellsPerAxisY*numberOfCellsPerAxisX];
+    double residuals[(numberOfCellsPerAxisZ+1)*(numberOfCellsPerAxisY+1)*(numberOfCellsPerAxisX+1)];
     for (int iz=1; iz<numberOfCellsPerAxisZ+1; iz++) {
       for (int iy=1; iy<numberOfCellsPerAxisY+1; iy++) {
         for (int ix=1; ix<numberOfCellsPerAxisX+1; ix++) {
