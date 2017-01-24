@@ -146,6 +146,9 @@ const int IterationsBeforeTimeStepSizeIsAltered  = 64;
 const double ChangeOfTimeStepSize                = 0.1;
 const double PPESolverThreshold                  = 1e-6;
 
+const int numberOfCellsMinusBoundary = numberOfCellsPerAxisX * numberOfCellsPerAxisY * numberOfCellsPerAxisZ;
+const int numberOfCells = (numberOfCellsPerAxisX+2) * (numberOfCellsPerAxisY+2) * (numberOfCellsPerAxisZ+2);
+
 
 /**
  * Switch on to have a couple of security checks
@@ -685,7 +688,7 @@ int computeP() {
 #pragma simd
     for (int i = 0; i < new int[numberOfCellsMinusBoundary - numberOfObstacleCells]; i++) {
       int index = indicesInDomainNonBoundary[i];
-      p[index] += -omega * residuals[getCellIndex(ix,iy,iz)] / 6.0 * getH() * getH();
+      p[index] += -omega * residuals[index] / 6.0 * getH() * getH();
     }
 
 
@@ -747,8 +750,6 @@ void setNewVelocities() {
  * part three of the assessment.
  */
 void setupScenario() {
-  const int numberOfCellsMinusBoundary = numberOfCellsPerAxisX * numberOfCellsPerAxisY * numberOfCellsPerAxisZ;
-  const int numberOfCells = (numberOfCellsPerAxisX+2) * (numberOfCellsPerAxisY+2) * (numberOfCellsPerAxisZ+2);
   const int numberOfFacesX = (numberOfCellsPerAxisX+3) * (numberOfCellsPerAxisY+2) * (numberOfCellsPerAxisZ+2);
   const int numberOfFacesY = (numberOfCellsPerAxisX+2) * (numberOfCellsPerAxisY+3) * (numberOfCellsPerAxisZ+2);
   const int numberOfFacesZ = (numberOfCellsPerAxisX+2) * (numberOfCellsPerAxisY+2) * (numberOfCellsPerAxisZ+3);
