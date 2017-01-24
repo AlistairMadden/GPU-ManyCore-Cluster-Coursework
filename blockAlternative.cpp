@@ -840,8 +840,8 @@ void setupScenario() {
 
   int numberOfObstacleCells = 0;
 
-  for (cell : cellIsInside) {
-    if(cell == false) {
+  for (bool cell : cellIsInside) {
+    if(!cell) {
       numberOfObstacleCells++;
     }
   }
@@ -988,7 +988,7 @@ void setupScenario() {
     }
   }
 
-  std::cout << numberOfObstacleCells;
+  std::cout << numberOfObstacleCells << std::endl;
 
   validateThatEntriesAreBounded("setupScenario()");
 }
