@@ -1000,12 +1000,15 @@ void setupScenario() {
 
   unsafeCells = new int[numberOfObstacleCells];
 
+  std::cout << numberOfObstacleCells << std::endl;
+
   int unsafeCellsIndex = 0;
 
   for (int iCell; iCell < numberOfCells; iCell++) {
     if(!safeCell[iCell]) {
       unsafeCells[unsafeCellsIndex] = iCell;
       unsafeCellsIndex++;
+      std::cout << unsafeCellsIndex << std::endl;
     }
   }
 
