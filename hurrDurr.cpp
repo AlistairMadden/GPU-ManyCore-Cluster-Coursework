@@ -816,7 +816,7 @@ void setupScenario() {
     Fz[i]=0;
   }
 
-  const int numberOfCubes = numberOfCellsPerAxisX/cubeDimension * numberOfCellsPerAxisY/cubeDimension * numberOfCellsPerAxisZ/cubeDimension;
+  const int numberOfCubes = (numberOfCellsPerAxisX/cubeDimension) * (numberOfCellsPerAxisY/cubeDimension) * (numberOfCellsPerAxisZ/cubeDimension);
   const int numberOfCellsMinusBoundary = numberOfCellsPerAxisX * numberOfCellsPerAxisY * numberOfCellsPerAxisZ;
 
   double* anythingElse = new double[numberOfCellsMinusBoundary - (numberOfCubes * cubeDimension * cubeDimension * cubeDimension)];
