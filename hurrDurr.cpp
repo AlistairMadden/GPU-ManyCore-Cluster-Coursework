@@ -816,7 +816,7 @@ void setupScenario() {
     Fz[i]=0;
   }
 
-  const numberOfCubes = floor(numberOfCellsPerAxisX/cubeDimension) * floor(numberOfCellsPerAxisY/cubeDimension) * floor(numberOfCellsPerAxisZ/cubeDimension);
+  const int numberOfCubes = floor(numberOfCellsPerAxisX/cubeDimension) * floor(numberOfCellsPerAxisY/cubeDimension) * floor(numberOfCellsPerAxisZ/cubeDimension);
 
 
 
