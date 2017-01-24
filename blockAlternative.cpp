@@ -662,7 +662,7 @@ int computeP() {
     double* residuals = new double[(numberOfCellsPerAxisZ+2)*(numberOfCellsPerAxisY+2)*(numberOfCellsPerAxisX+2)];
     for (int iz=1; iz<numberOfCellsPerAxisZ+1; iz++) {
       for (int iy=1; iy<numberOfCellsPerAxisY+1; iy++) {
-        #pragma simd
+        #pragma GCC ivdep
         for (int ix=1; ix<numberOfCellsPerAxisX+1; ix++) {
           if ( cellIsInside[getCellIndex(ix,iy,iz)] ) {
             double residual = rhs[ getCellIndex(ix,iy,iz) ] +
@@ -686,7 +686,7 @@ int computeP() {
     // Kind of manual synchronisation
     for (int iz=1; iz<numberOfCellsPerAxisZ+1; iz++) {
       for (int iy = 1; iy < numberOfCellsPerAxisY + 1; iy++) {
-        #pragma simd
+        #pragma GCC ivdep
         for (int ix = 1; ix < numberOfCellsPerAxisX + 1; ix++) {
           if (cellIsInside[getCellIndex(ix, iy, iz)]) {
             p[getCellIndex(ix,iy,iz)] += -omega * residuals[getCellIndex(ix,iy,iz)] / 6.0 * getH() * getH();
