@@ -664,7 +664,8 @@ int computeP() {
     double* residuals = new double[(numberOfCellsPerAxisZ+2)*(numberOfCellsPerAxisY+2)*(numberOfCellsPerAxisX+2)];
 
 #pragma simd
-    for (int index : indicesInDomainNonBoundary) {
+    for (int i = 0; i < new int[numberOfCellsMinusBoundary - numberOfObstacleCells]; i++) {
+      int index = indicesInDomainNonBoundary[i];
       double residual = rhs[ index ] +
           1.0/getH()/getH()*
           (
@@ -682,8 +683,9 @@ int computeP() {
 
     // Kind of manual synchronisation
 #pragma simd
-    for (int index : indicesInDomainNonBoundary) {
-      p[getCellIndex(ix,iy,iz)] += -omega * residuals[getCellIndex(ix,iy,iz)] / 6.0 * getH() * getH();
+    for (int i = 0; i < new int[numberOfCellsMinusBoundary - numberOfObstacleCells]; i++) {
+      int index = indicesInDomainNonBoundary[i];
+      p[index] += -omega * residuals[getCellIndex(ix,iy,iz)] / 6.0 * getH() * getH();
     }
 
 
@@ -1029,7 +1031,7 @@ void setupScenario() {
     }
   }
 
-  for (int iz=1; iz<numberOfCellsPerAxisZ + 1; iz++) {
+  for (int iz = 1; iz<numberOfCellsPerAxisZ + 1; iz++) {
     for (int iy = 1; iy < numberOfCellsPerAxisY + 1; iy++) {
       for (int ix = 1; ix < numberOfCellsPerAxisX + 1; ix++) {
         if(cellIsInside[getCellIndex(ix, iy, iz)]) {
