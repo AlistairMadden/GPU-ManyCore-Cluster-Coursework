@@ -819,7 +819,9 @@ void setupScenario() {
   const int numberOfCubes = floor(numberOfCellsPerAxisX/cubeDimension) * floor(numberOfCellsPerAxisY/cubeDimension) * floor(numberOfCellsPerAxisZ/cubeDimension);
 
 
-
+  std::cout << floor(numberOfCellsPerAxisX/cubeDimension) << std::endl;
+  std::cout << floor(numberOfCellsPerAxisY/cubeDimension) << std::endl;
+  std::cout << floor(numberOfCellsPerAxisZ/cubeDimension) << std::endl;
   std::cout << numberOfCubes << std::endl;
   std::cout << numberOfCubes * 4 << std::endl;
 
