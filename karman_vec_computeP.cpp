@@ -672,20 +672,20 @@ int computeP() {
                 - 1.0 * p[ getCellIndex(ix,iy,iz+1) ]
                 + 6.0 * p[ getCellIndex(ix,iy,iz) ]
               );
-            globalResidual              += residual * residual;
-            p[ getCellIndex(ix,iy,iz) ] += -omega / 6.0 * getH() * getH();
+            globalResidual += residual * residual;
             residuals[getCellIndex(ix,iy,iz)] = residual;
           }
         }
       }
     }
 
+    // Kind of manual synchronisation
     for (int iz=1; iz<numberOfCellsPerAxisZ+1; iz++) {
       for (int iy = 1; iy < numberOfCellsPerAxisY + 1; iy++) {
         #pragma simd
         for (int ix = 1; ix < numberOfCellsPerAxisX + 1; ix++) {
           if (cellIsInside[getCellIndex(ix, iy, iz)]) {
-            p[getCellIndex(ix,iy,iz)] *= residuals[getCellIndex(ix,iy,iz)];
+            p[getCellIndex(ix,iy,iz)] += -omega * residuals[getCellIndex(ix,iy,iz)] / 6.0 * getH() * getH();
           }
         }
       }
