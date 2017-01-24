@@ -132,6 +132,7 @@ bool* cellIsInside;
 bool * safeCell;
 
 int * unsafeCells;
+int * safeCells;
 
 double timeStepSize;
 
@@ -850,8 +851,6 @@ void setupScenario() {
     safeCell[ getCellIndex(xOffsetOfObstacle+sizeOfObstacle+1,  2*sizeOfObstacle+2,iz) ] = false;
   }
 
-  std::cout << "here" << std::endl;
-
   // Loop over cells that are the obstacle. Set cells around the obstacle to be unsafe
   for (int iz=1 + zDelta; iz<numberOfCellsPerAxisZ+2-zDelta; iz++) {
 
@@ -992,8 +991,6 @@ void setupScenario() {
     }
   }
 
-  std::cout << "here" << std::endl;
-
   int numberOfObstacleCells = 0;
 
   // Apple inspired cells
@@ -1004,19 +1001,24 @@ void setupScenario() {
   }
 
   unsafeCells = new int[numberOfObstacleCells];
+  safeCells = new int[numberOfCells - numberOfObstacleCells];
 
   std::cout << numberOfObstacleCells << std::endl;
 
   int unsafeCellsIndex = 0;
+  int safeCellsIndex = 0;
 
   for (int iCell = 0; iCell < numberOfCells; iCell++) {
     if(!safeCell[iCell]) {
       unsafeCells[unsafeCellsIndex] = iCell;
       unsafeCellsIndex++;
-      std::cout << iCell << std::endl;
+    }
+    else {
+      safeCells[safeCellsIndex] = iCell;
+      safeCellsIndex++;
     }
   }
-  
+
   validateThatEntriesAreBounded("setupScenario()");
 }
 
