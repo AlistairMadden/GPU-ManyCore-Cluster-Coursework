@@ -850,6 +850,8 @@ void setupScenario() {
     safeCell[ getCellIndex(xOffsetOfObstacle+sizeOfObstacle+1,  2*sizeOfObstacle+2,iz) ] = false;
   }
 
+  std::cout << "here" << std::endl;
+
   // Loop over cells that are the obstacle. Set cells around the obstacle to be unsafe
   for (int iz=1 + zDelta; iz<numberOfCellsPerAxisZ+2-zDelta; iz++) {
 
@@ -989,6 +991,8 @@ void setupScenario() {
       safeCell[getCellIndex(xOffsetOfObstacle + sizeOfObstacle + 1, 2 * sizeOfObstacle + 2, iz + 1)] = false;
     }
   }
+
+  std::cout << "here" << std::endl;
 
   int numberOfObstacleCells = 0;
 
