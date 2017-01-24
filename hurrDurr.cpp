@@ -817,31 +817,30 @@ void setupScenario() {
   }
 
   const int numberOfCubes = floor(numberOfCellsPerAxisX/cubeDimension) * floor(numberOfCellsPerAxisY/cubeDimension) * floor(numberOfCellsPerAxisZ/cubeDimension);
+  const int numberOfCellsMinusBoundary = numberOfCellsPerAxisX * numberOfCellsPerAxisY * numberOfCellsPerAxisZ;
 
-
-  std::cout << floor(numberOfCellsPerAxisX/cubeDimension) << std::endl;
-  std::cout << floor(numberOfCellsPerAxisY/cubeDimension) << std::endl;
-  std::cout << floor(numberOfCellsPerAxisZ/cubeDimension) << std::endl;
-  std::cout << numberOfCubes << std::endl;
-  std::cout << numberOfCubes * 4 << std::endl;
+  double* anythingElse = new double[numberOfCellsMinusBoundary - (numberOfCubes * cubeDimension * cubeDimension * cubeDimension)];
+  double* fullCubes = new double[numberOfCubes * cubeDimension * cubeDimension * cubeDimension];
 
   //
   // Insert the obstacle that forces the fluid to do something interesting.
+  // Assuming obstacle always lies within full cubes
   //
   int sizeOfObstacle    = numberOfCellsPerAxisY/3;
   int xOffsetOfObstacle = sizeOfObstacle*2;
   if (sizeOfObstacle<2) sizeOfObstacle = 2;
   int zDelta = numberOfCellsPerAxisZ<=8 ? 0 : sizeOfObstacle/3;
     for (int iz=1 + zDelta; iz<numberOfCellsPerAxisZ+2-zDelta; iz++) {
-    cellIsInside[ getCellIndex(xOffsetOfObstacle,    sizeOfObstacle+1,iz) ] = false;
-    cellIsInside[ getCellIndex(xOffsetOfObstacle+1,  sizeOfObstacle+1,iz) ] = false;
-    for (int ii=0; ii<sizeOfObstacle; ii++) {
-      cellIsInside[ getCellIndex(xOffsetOfObstacle+ii,  sizeOfObstacle+ii+2,iz) ] = false;
-      cellIsInside[ getCellIndex(xOffsetOfObstacle+ii+1,sizeOfObstacle+ii+2,iz) ] = false;
-      cellIsInside[ getCellIndex(xOffsetOfObstacle+ii+2,sizeOfObstacle+ii+2,iz) ] = false;
-    }
-    cellIsInside[ getCellIndex(xOffsetOfObstacle+sizeOfObstacle+0,  2*sizeOfObstacle+2,iz) ] = false;
-    cellIsInside[ getCellIndex(xOffsetOfObstacle+sizeOfObstacle+1,  2*sizeOfObstacle+2,iz) ] = false;
+      std::cout << xOffsetOfObstacle/cubeDimension << " " << (sizeOfObstacle+1)/cubeDimension << " " << iz/cubeDimension << std::endl;
+      cellIsInside[ getCellIndex(xOffsetOfObstacle,    sizeOfObstacle+1,iz) ] = false;
+      cellIsInside[ getCellIndex(xOffsetOfObstacle+1,  sizeOfObstacle+1,iz) ] = false;
+      for (int ii=0; ii<sizeOfObstacle; ii++) {
+        cellIsInside[ getCellIndex(xOffsetOfObstacle+ii,  sizeOfObstacle+ii+2,iz) ] = false;
+        cellIsInside[ getCellIndex(xOffsetOfObstacle+ii+1,sizeOfObstacle+ii+2,iz) ] = false;
+        cellIsInside[ getCellIndex(xOffsetOfObstacle+ii+2,sizeOfObstacle+ii+2,iz) ] = false;
+      }
+      cellIsInside[ getCellIndex(xOffsetOfObstacle+sizeOfObstacle+0,  2*sizeOfObstacle+2,iz) ] = false;
+      cellIsInside[ getCellIndex(xOffsetOfObstacle+sizeOfObstacle+1,  2*sizeOfObstacle+2,iz) ] = false;
   }
 
   validateThatEntriesAreBounded("setupScenario()");
