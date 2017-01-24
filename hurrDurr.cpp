@@ -821,7 +821,7 @@ void setupScenario() {
 
 
   std::cout << numberOfCubes << std::endl;
-  sts::cout << numberOfCubes * 4 << std::endl;
+  std::cout << numberOfCubes * 4 << std::endl;
 
   //
   // Insert the obstacle that forces the fluid to do something interesting.
