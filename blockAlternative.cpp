@@ -996,7 +996,7 @@ void setupScenario() {
 
   int numberOfObstacleCells = 0;
 
-  for (int iCell; iCell < numberOfCells; iCell++) {
+  for (int iCell = 0; iCell < numberOfCells; iCell++) {
     if(!safeCell[iCell]) {
       numberOfObstacleCells++;
     }
@@ -1008,7 +1008,7 @@ void setupScenario() {
 
   int unsafeCellsIndex = 0;
 
-  for (int iCell; iCell < numberOfCells; iCell++) {
+  for (int iCell = 0; iCell < numberOfCells; iCell++) {
     if(!safeCell[iCell]) {
       unsafeCells[unsafeCellsIndex] = iCell;
       unsafeCellsIndex++;
