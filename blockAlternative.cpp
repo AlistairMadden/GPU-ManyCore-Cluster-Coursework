@@ -134,6 +134,7 @@ bool * safeCell;
 int * unsafeCells;
 int * safeCells;
 int * indicesInDomain;
+int * indicesInDomainNonBoundary;
 
 double timeStepSize;
 
@@ -661,40 +662,30 @@ int computeP() {
     globalResidual         = 0.0;
     // waste of memory... sue me
     double* residuals = new double[(numberOfCellsPerAxisZ+2)*(numberOfCellsPerAxisY+2)*(numberOfCellsPerAxisX+2)];
-    for (int iz=1; iz<numberOfCellsPerAxisZ+1; iz++) {
-      for (int iy=1; iy<numberOfCellsPerAxisY+1; iy++) {
-        #pragma simd
-        for (int ix=1; ix<numberOfCellsPerAxisX+1; ix++) {
-          if ( cellIsInside[getCellIndex(ix,iy,iz)] ) {
-            double residual = rhs[ getCellIndex(ix,iy,iz) ] +
-              1.0/getH()/getH()*
-              (
-                - 1.0 * p[ getCellIndex(ix-1,iy,iz) ]
-                - 1.0 * p[ getCellIndex(ix+1,iy,iz) ]
-                - 1.0 * p[ getCellIndex(ix,iy-1,iz) ]
-                - 1.0 * p[ getCellIndex(ix,iy+1,iz) ]
-                - 1.0 * p[ getCellIndex(ix,iy,iz-1) ]
-                - 1.0 * p[ getCellIndex(ix,iy,iz+1) ]
-                + 6.0 * p[ getCellIndex(ix,iy,iz) ]
-              );
-            globalResidual += residual * residual;
-            residuals[getCellIndex(ix,iy,iz)] = residual;
-          }
-        }
-      }
+
+#pragma simd
+    for (int index : indicesInDomainNonBoundary) {
+      double residual = rhs[ index ] +
+          1.0/getH()/getH()*
+          (
+              - 1.0 * p[ index - 1 ]
+              - 1.0 * p[ index + 1 ]
+              - 1.0 * p[ index - (numberOfCellsPerAxisX+2) ]
+              - 1.0 * p[ index + (numberOfCellsPerAxisX+2) ]
+              - 1.0 * p[ index - (numberOfCellsPerAxisX+2)*(numberOfCellsPerAxisY+2) ]
+              - 1.0 * p[ index + (numberOfCellsPerAxisX+2)*(numberOfCellsPerAxisY+2) ]
+              + 6.0 * p[ index ]
+          );
+      globalResidual += residual * residual;
+      residuals[index] = residual;
     }
 
     // Kind of manual synchronisation
-    for (int iz=1; iz<numberOfCellsPerAxisZ+1; iz++) {
-      for (int iy = 1; iy < numberOfCellsPerAxisY + 1; iy++) {
-        #pragma simd
-        for (int ix = 1; ix < numberOfCellsPerAxisX + 1; ix++) {
-          if (cellIsInside[getCellIndex(ix, iy, iz)]) {
-            p[getCellIndex(ix,iy,iz)] += -omega * residuals[getCellIndex(ix,iy,iz)] / 6.0 * getH() * getH();
-          }
-        }
-      }
+#pragma simd
+    for (int index : indicesInDomainNonBoundary) {
+      p[getCellIndex(ix,iy,iz)] += -omega * residuals[getCellIndex(ix,iy,iz)] / 6.0 * getH() * getH();
     }
+
 
     globalResidual        = std::sqrt(globalResidual);
     firstResidual         = firstResidual==0 ? globalResidual : firstResidual;
@@ -754,7 +745,7 @@ void setNewVelocities() {
  * part three of the assessment.
  */
 void setupScenario() {
-  const int numberOfCellsWithoutBoundary = numberOfCellsPerAxisX * numberOfCellsPerAxisY * numberOfCellsPerAxisZ;
+  const int numberOfCellsMinusBoundary = numberOfCellsPerAxisX * numberOfCellsPerAxisY * numberOfCellsPerAxisZ;
   const int numberOfCells = (numberOfCellsPerAxisX+2) * (numberOfCellsPerAxisY+2) * (numberOfCellsPerAxisZ+2);
   const int numberOfFacesX = (numberOfCellsPerAxisX+3) * (numberOfCellsPerAxisY+2) * (numberOfCellsPerAxisZ+2);
   const int numberOfFacesY = (numberOfCellsPerAxisX+2) * (numberOfCellsPerAxisY+3) * (numberOfCellsPerAxisZ+2);
@@ -1008,12 +999,16 @@ void setupScenario() {
     }
   }
 
+  // Assuming obstacle never appears in boundary
+  indicesInDomainNonBoundary = new int[numberOfCellsMinusBoundary - numberOfObstacleCells];
+
   indicesInDomain = new int[numberOfCells - numberOfObstacleCells];
   unsafeCells = new int[numberOfUnsafeCells];
   safeCells = new int[numberOfCells - numberOfUnsafeCells];
 
   std::cout << numberOfObstacleCells << std::endl;
 
+  int indicesInDomainNonBoundaryIndex = 0;
   int indicesInDomainIndex = 0;
   int unsafeCellsIndex = 0;
   int safeCellsIndex = 0;
@@ -1033,6 +1028,17 @@ void setupScenario() {
       indicesInDomainIndex++;
     }
   }
+
+  for (int iz=1; iz<numberOfCellsPerAxisZ + 1; iz++) {
+    for (int iy = 1; iy < numberOfCellsPerAxisY + 1; iy++) {
+      for (int ix = 1; ix < numberOfCellsPerAxisX + 1; ix++) {
+        if(cellIsInside[getCellIndex(ix, iy, iz)]) {
+          indicesInDomainNonBoundary[indicesInDomainNonBoundaryIndex] = getCellIndex(ix, iy, iz);
+        }
+      }
+    }
+  }
+
 
   validateThatEntriesAreBounded("setupScenario()");
 }
