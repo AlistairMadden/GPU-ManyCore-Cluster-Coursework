@@ -136,6 +136,8 @@ int * safeCells;
 int * indicesInDomain;
 int * indicesInDomainNonBoundary;
 
+int indicesInDomainNonBoundarySize;
+
 double timeStepSize;
 
 double ReynoldsNumber = 0;
@@ -145,9 +147,6 @@ const int MinAverageComputePIterations           = 200;
 const int IterationsBeforeTimeStepSizeIsAltered  = 64;
 const double ChangeOfTimeStepSize                = 0.1;
 const double PPESolverThreshold                  = 1e-6;
-
-const int numberOfCellsMinusBoundary = numberOfCellsPerAxisX * numberOfCellsPerAxisY * numberOfCellsPerAxisZ;
-const int numberOfCells = (numberOfCellsPerAxisX+2) * (numberOfCellsPerAxisY+2) * (numberOfCellsPerAxisZ+2);
 
 
 /**
@@ -667,7 +666,7 @@ int computeP() {
     double* residuals = new double[(numberOfCellsPerAxisZ+2)*(numberOfCellsPerAxisY+2)*(numberOfCellsPerAxisX+2)];
 
 #pragma simd
-    for (int i = 0; i < new int[numberOfCellsMinusBoundary - numberOfObstacleCells]; i++) {
+    for (int i = 0; i < indicesInDomainNonBoundarySize; i++) {
       int index = indicesInDomainNonBoundary[i];
       double residual = rhs[ index ] +
           1.0/getH()/getH()*
@@ -686,7 +685,7 @@ int computeP() {
 
     // Kind of manual synchronisation
 #pragma simd
-    for (int i = 0; i < new int[numberOfCellsMinusBoundary - numberOfObstacleCells]; i++) {
+    for (int i = 0; i < indicesInDomainNonBoundarySize; i++) {
       int index = indicesInDomainNonBoundary[i];
       p[index] += -omega * residuals[index] / 6.0 * getH() * getH();
     }
@@ -750,6 +749,8 @@ void setNewVelocities() {
  * part three of the assessment.
  */
 void setupScenario() {
+  const int numberOfCellsMinusBoundary = numberOfCellsPerAxisX * numberOfCellsPerAxisY * numberOfCellsPerAxisZ;
+  const int numberOfCells = (numberOfCellsPerAxisX+2) * (numberOfCellsPerAxisY+2) * (numberOfCellsPerAxisZ+2);
   const int numberOfFacesX = (numberOfCellsPerAxisX+3) * (numberOfCellsPerAxisY+2) * (numberOfCellsPerAxisZ+2);
   const int numberOfFacesY = (numberOfCellsPerAxisX+2) * (numberOfCellsPerAxisY+3) * (numberOfCellsPerAxisZ+2);
   const int numberOfFacesZ = (numberOfCellsPerAxisX+2) * (numberOfCellsPerAxisY+2) * (numberOfCellsPerAxisZ+3);
@@ -1004,6 +1005,7 @@ void setupScenario() {
 
   // Assuming obstacle never appears in boundary
   indicesInDomainNonBoundary = new int[numberOfCellsMinusBoundary - numberOfObstacleCells];
+  indicesInDomainNonBoundarySize = numberOfCellsMinusBoundary - numberOfObstacleCells;
 
   indicesInDomain = new int[numberOfCells - numberOfObstacleCells];
   unsafeCells = new int[numberOfUnsafeCells];
