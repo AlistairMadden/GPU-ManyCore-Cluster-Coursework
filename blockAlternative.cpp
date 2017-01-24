@@ -133,6 +133,7 @@ bool * safeCell;
 
 int * unsafeCells;
 int * safeCells;
+int * indicesInDomain;
 
 double timeStepSize;
 
@@ -991,20 +992,29 @@ void setupScenario() {
     }
   }
 
+  // Number of cells containing the obstacle
   int numberOfObstacleCells = 0;
+
+  // Number of cells containing the obstacle or adjacent to the obstacle
+  int numberOfUnsafeCells = 0;
 
   // Apple inspired cells
   for (int iCell = 0; iCell < numberOfCells; iCell++) {
-    if(!safeCell[iCell]) {
+    if(!cellIsInside[iCell]) {
       numberOfObstacleCells++;
+    }
+    else if(!safeCell[iCell]) {
+      numberOfUnsafeCells++;
     }
   }
 
-  unsafeCells = new int[numberOfObstacleCells];
-  safeCells = new int[numberOfCells - numberOfObstacleCells];
+  indicesInDomain = new int[numberOfCells - numberOfObstacleCells];
+  unsafeCells = new int[numberOfUnsafeCells];
+  safeCells = new int[numberOfCells - numberOfUnsafeCells];
 
   std::cout << numberOfObstacleCells << std::endl;
 
+  int indicesInDomainIndex = 0;
   int unsafeCellsIndex = 0;
   int safeCellsIndex = 0;
 
@@ -1016,6 +1026,11 @@ void setupScenario() {
     else {
       safeCells[safeCellsIndex] = iCell;
       safeCellsIndex++;
+    }
+
+    if(cellIsInside[iCell]) {
+      indicesInDomain[indicesInDomainIndex] = iCell;
+      indicesInDomainIndex++;
     }
   }
 
