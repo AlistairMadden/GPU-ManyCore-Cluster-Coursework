@@ -840,8 +840,8 @@ void setupScenario() {
 
   int numberOfObstacleCells = 0;
 
-  for (bool cell : cellIsInside) {
-    if(!cell) {
+  for (int iCell; iCell < numberOfCells; iCell++) {
+    if(!cellIsInside[iCell]) {
       numberOfObstacleCells++;
     }
   }
