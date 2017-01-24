@@ -749,7 +749,7 @@ void setNewVelocities() {
  * part three of the assessment.
  */
 void setupScenario() {
-  const double cubeDimension = 4;
+  const int cubeDimension = 4;
   const int numberOfCells = (numberOfCellsPerAxisX+2) * (numberOfCellsPerAxisY+2) * (numberOfCellsPerAxisZ+2);
   const int numberOfFacesX = (numberOfCellsPerAxisX+3) * (numberOfCellsPerAxisY+2) * (numberOfCellsPerAxisZ+2);
   const int numberOfFacesY = (numberOfCellsPerAxisX+2) * (numberOfCellsPerAxisY+3) * (numberOfCellsPerAxisZ+2);
@@ -816,11 +816,13 @@ void setupScenario() {
     Fz[i]=0;
   }
 
-  const int numberOfCubes = floor(numberOfCellsPerAxisX/cubeDimension) * floor(numberOfCellsPerAxisY/cubeDimension) * floor(numberOfCellsPerAxisZ/cubeDimension);
+  const int numberOfCubes = numberOfCellsPerAxisX/cubeDimension * numberOfCellsPerAxisY/cubeDimension * numberOfCellsPerAxisZ/cubeDimension;
   const int numberOfCellsMinusBoundary = numberOfCellsPerAxisX * numberOfCellsPerAxisY * numberOfCellsPerAxisZ;
 
   double* anythingElse = new double[numberOfCellsMinusBoundary - (numberOfCubes * cubeDimension * cubeDimension * cubeDimension)];
   double* fullCubes = new double[numberOfCubes * cubeDimension * cubeDimension * cubeDimension];
+
+  std::cout << numberOfCubes << std::endl;
 
   //
   // Insert the obstacle that forces the fluid to do something interesting.
@@ -831,7 +833,7 @@ void setupScenario() {
   if (sizeOfObstacle<2) sizeOfObstacle = 2;
   int zDelta = numberOfCellsPerAxisZ<=8 ? 0 : sizeOfObstacle/3;
     for (int iz=1 + zDelta; iz<numberOfCellsPerAxisZ+2-zDelta; iz++) {
-      std::cout << xOffsetOfObstacle/cubeDimension << " " << (sizeOfObstacle+1)/cubeDimension << " " << iz/cubeDimension << std::endl;
+      //std::cout << xOffsetOfObstacle/cubeDimension << " " << (sizeOfObstacle+1)/cubeDimension << " " << iz/cubeDimension << std::endl;
       cellIsInside[ getCellIndex(xOffsetOfObstacle,    sizeOfObstacle+1,iz) ] = false;
       cellIsInside[ getCellIndex(xOffsetOfObstacle+1,  sizeOfObstacle+1,iz) ] = false;
       for (int ii=0; ii<sizeOfObstacle; ii++) {
