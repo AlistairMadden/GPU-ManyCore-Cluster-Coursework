@@ -129,6 +129,7 @@ double* ink;
  * Is cell inside domain
  */
 bool* cellIsInside;
+bool * safeCell;
 
 double timeStepSize;
 
@@ -778,6 +779,7 @@ void setupScenario() {
   ink = new (std::nothrow) double[(numberOfCellsPerAxisX+1) * (numberOfCellsPerAxisY+1) * (numberOfCellsPerAxisZ+1)];
 
   cellIsInside = new (std::nothrow) bool[numberOfCells];
+  safeCell = new bool[numberOfCells];
 
   if (
     ux  == 0 ||
@@ -801,6 +803,7 @@ void setupScenario() {
   for (int i=0; i<numberOfCells; i++) {
     p[i]            = 0.0;
     cellIsInside[i] = true;
+    safeCell[i] = true;
   }
 
   for (int i=0; i<numberOfFacesX; i++) {
@@ -818,172 +821,177 @@ void setupScenario() {
 
   //
   // Insert the obstacle that forces the fluid to do something interesting.
-  // Assuming obstacle always lies within full cubes
   //
   int sizeOfObstacle    = numberOfCellsPerAxisY/3;
   int xOffsetOfObstacle = sizeOfObstacle*2;
   if (sizeOfObstacle<2) sizeOfObstacle = 2;
   int zDelta = numberOfCellsPerAxisZ<=8 ? 0 : sizeOfObstacle/3;
 
-
+  // Probably a better way of copying cellIsInside
   for (int iz=1 + zDelta; iz<numberOfCellsPerAxisZ+2-zDelta; iz++) {
     cellIsInside[ getCellIndex(xOffsetOfObstacle,    sizeOfObstacle+1,iz) ] = false;
     cellIsInside[ getCellIndex(xOffsetOfObstacle+1,  sizeOfObstacle+1,iz) ] = false;
+    safeCell[ getCellIndex(xOffsetOfObstacle,    sizeOfObstacle+1,iz) ] = false;
+    safeCell[ getCellIndex(xOffsetOfObstacle+1,  sizeOfObstacle+1,iz) ] = false;
+
     for (int ii=0; ii<sizeOfObstacle; ii++) {
       cellIsInside[ getCellIndex(xOffsetOfObstacle+ii,  sizeOfObstacle+ii+2,iz) ] = false;
       cellIsInside[ getCellIndex(xOffsetOfObstacle+ii+1,sizeOfObstacle+ii+2,iz) ] = false;
       cellIsInside[ getCellIndex(xOffsetOfObstacle+ii+2,sizeOfObstacle+ii+2,iz) ] = false;
+      safeCell[ getCellIndex(xOffsetOfObstacle+ii,  sizeOfObstacle+ii+2,iz) ] = false;
+      safeCell[ getCellIndex(xOffsetOfObstacle+ii+1,sizeOfObstacle+ii+2,iz) ] = false;
+      safeCell[ getCellIndex(xOffsetOfObstacle+ii+2,sizeOfObstacle+ii+2,iz) ] = false;
     }
     cellIsInside[ getCellIndex(xOffsetOfObstacle+sizeOfObstacle+0,  2*sizeOfObstacle+2,iz) ] = false;
     cellIsInside[ getCellIndex(xOffsetOfObstacle+sizeOfObstacle+1,  2*sizeOfObstacle+2,iz) ] = false;
+    safeCell[ getCellIndex(xOffsetOfObstacle+sizeOfObstacle+0,  2*sizeOfObstacle+2,iz) ] = false;
+    safeCell[ getCellIndex(xOffsetOfObstacle+sizeOfObstacle+1,  2*sizeOfObstacle+2,iz) ] = false;
   }
 
-  int numberOfObstacleCells = 0;
-
-  for (int iCell; iCell < numberOfCells; iCell++) {
-    if(!cellIsInside[iCell]) {
-      numberOfObstacleCells++;
-    }
-  }
-
-  std::cout << numberOfObstacleCells << std::endl;
-
-  // Loop over cells that are the obstacle. Count how many cells are around the obstacle
+  // Loop over cells that are the obstacle. Set cells around the obstacle to be unsafe
   for (int iz=1 + zDelta; iz<numberOfCellsPerAxisZ+2-zDelta; iz++) {
 
     if (cellIsInside[getCellIndex(xOffsetOfObstacle - 1, sizeOfObstacle + 1, iz)]) {
-      numberOfObstacleCells++;
+      safeCell[getCellIndex(xOffsetOfObstacle - 1, sizeOfObstacle + 1, iz)] = false;
     }
     if (cellIsInside[getCellIndex(xOffsetOfObstacle, sizeOfObstacle, iz)]) {
-      numberOfObstacleCells++;
+      safeCell[getCellIndex(xOffsetOfObstacle, sizeOfObstacle, iz)] = false;
     }
     if (cellIsInside[getCellIndex(xOffsetOfObstacle, sizeOfObstacle + 1, iz - 1)]) {
-      numberOfObstacleCells++;
+      safeCell[getCellIndex(xOffsetOfObstacle, sizeOfObstacle + 1, iz - 1)] = false;
     }
-    if (cellIsInside[getCellIndex(xOffsetOfObstacle + 1, sizeOfObstacle, iz)]) {
-      numberOfObstacleCells++;
+    if (cellIsInside[getCellIndex(xOffsetOfObstacle + 1, sizeOfObstacle + 1, iz)]) {
+      safeCell[getCellIndex(xOffsetOfObstacle + 1, sizeOfObstacle + 1, iz)] = false;
     }
     if (cellIsInside[getCellIndex(xOffsetOfObstacle, sizeOfObstacle + 2, iz)]) {
-      numberOfObstacleCells++;
+      safeCell[getCellIndex(xOffsetOfObstacle, sizeOfObstacle + 2, iz)] = false;
     }
     if (cellIsInside[getCellIndex(xOffsetOfObstacle, sizeOfObstacle + 1, iz + 1)]) {
-      numberOfObstacleCells++;
+      safeCell[getCellIndex(xOffsetOfObstacle, sizeOfObstacle + 1, iz + 1)] = false;
     }
 
     if (cellIsInside[getCellIndex(xOffsetOfObstacle, sizeOfObstacle + 1, iz)]) {
-      numberOfObstacleCells++;
+      safeCell[getCellIndex(xOffsetOfObstacle, sizeOfObstacle + 1, iz)] = false;
     }
     if (cellIsInside[getCellIndex(xOffsetOfObstacle + 1, sizeOfObstacle, iz)]) {
-      numberOfObstacleCells++;
+      safeCell[getCellIndex(xOffsetOfObstacle + 1, sizeOfObstacle, iz)] = false;
     }
     if (cellIsInside[getCellIndex(xOffsetOfObstacle + 1, sizeOfObstacle + 1, iz - 1)]) {
-      numberOfObstacleCells++;
+      safeCell[getCellIndex(xOffsetOfObstacle + 1, sizeOfObstacle + 1, iz - 1)] = false;
     }
     if (cellIsInside[getCellIndex(xOffsetOfObstacle + 2, sizeOfObstacle + 1, iz)]) {
-      numberOfObstacleCells++;
+      safeCell[getCellIndex(xOffsetOfObstacle + 2, sizeOfObstacle + 1, iz)] = false;
     }
     if (cellIsInside[getCellIndex(xOffsetOfObstacle + 1, sizeOfObstacle + 2, iz)]) {
-      numberOfObstacleCells++;
+      safeCell[getCellIndex(xOffsetOfObstacle + 1, sizeOfObstacle + 2, iz)] = false;
     }
     if (cellIsInside[getCellIndex(xOffsetOfObstacle + 1, sizeOfObstacle + 1, iz + 1)]) {
-      numberOfObstacleCells++;
+      safeCell[getCellIndex(xOffsetOfObstacle + 1, sizeOfObstacle + 1, iz + 1)] = false;
     }
 
     for (int ii=0; ii<sizeOfObstacle; ii++) {
 
       if (cellIsInside[getCellIndex(xOffsetOfObstacle + ii - 1, sizeOfObstacle + ii + 2, iz)]) {
-        numberOfObstacleCells++;
+        safeCell[getCellIndex(xOffsetOfObstacle + ii - 1, sizeOfObstacle + ii + 2, iz)] = false;
       }
       if (cellIsInside[getCellIndex(xOffsetOfObstacle + ii, sizeOfObstacle + ii + 1, iz)]) {
-        numberOfObstacleCells++;
+        safeCell[getCellIndex(xOffsetOfObstacle + ii, sizeOfObstacle + ii + 1, iz)] = false;
       }
       if (cellIsInside[getCellIndex(xOffsetOfObstacle + ii, sizeOfObstacle + ii + 2, iz - 1)]) {
-        numberOfObstacleCells++;
+        safeCell[getCellIndex(xOffsetOfObstacle + ii, sizeOfObstacle + ii + 2, iz - 1)] = false;
       }
       if (cellIsInside[getCellIndex(xOffsetOfObstacle + ii + 1, sizeOfObstacle + ii + 2, iz)]) {
-        numberOfObstacleCells++;
+        safeCell[getCellIndex(xOffsetOfObstacle + ii + 1, sizeOfObstacle + ii + 2, iz)] = false;
       }
       if (cellIsInside[getCellIndex(xOffsetOfObstacle + ii, sizeOfObstacle + ii + 3, iz)]) {
-        numberOfObstacleCells++;
+        safeCell[getCellIndex(xOffsetOfObstacle + ii, sizeOfObstacle + ii + 3, iz)] = false;
       }
       if (cellIsInside[getCellIndex(xOffsetOfObstacle + ii, sizeOfObstacle + ii + 2, iz + 1)]) {
-        numberOfObstacleCells++;
+        safeCell[getCellIndex(xOffsetOfObstacle + ii, sizeOfObstacle + ii + 2, iz + 1)] = false;
       }
 
       if (cellIsInside[getCellIndex(xOffsetOfObstacle + ii, sizeOfObstacle + ii + 2, iz)]) {
-        numberOfObstacleCells++;
+        safeCell[getCellIndex(xOffsetOfObstacle + ii, sizeOfObstacle + ii + 2, iz)] = false;
       }
       if (cellIsInside[getCellIndex(xOffsetOfObstacle + ii + 1, sizeOfObstacle + ii + 1, iz)]) {
-        numberOfObstacleCells++;
+        safeCell[getCellIndex(xOffsetOfObstacle + ii + 1, sizeOfObstacle + ii + 1, iz)] = false;
       }
       if (cellIsInside[getCellIndex(xOffsetOfObstacle + ii + 1, sizeOfObstacle + ii + 2, iz - 1)]) {
-        numberOfObstacleCells++;
+        safeCell[getCellIndex(xOffsetOfObstacle + ii + 1, sizeOfObstacle + ii + 2, iz - 1)] = false;
       }
       if (cellIsInside[getCellIndex(xOffsetOfObstacle + ii + 2, sizeOfObstacle + ii + 2, iz)]) {
-        numberOfObstacleCells++;
+        safeCell[getCellIndex(xOffsetOfObstacle + ii + 2, sizeOfObstacle + ii + 2, iz)] = false;
       }
       if (cellIsInside[getCellIndex(xOffsetOfObstacle + ii + 1, sizeOfObstacle + ii + 3, iz)]) {
-        numberOfObstacleCells++;
+        safeCell[getCellIndex(xOffsetOfObstacle + ii + 1, sizeOfObstacle + ii + 3, iz)] = false;
       }
       if (cellIsInside[getCellIndex(xOffsetOfObstacle + ii + 1, sizeOfObstacle + ii + 2, iz + 1)]) {
-        numberOfObstacleCells++;
+        safeCell[getCellIndex(xOffsetOfObstacle + ii + 1, sizeOfObstacle + ii + 2, iz + 1)] = false;
       }
 
       if (cellIsInside[getCellIndex(xOffsetOfObstacle + ii + 1, sizeOfObstacle + ii + 2, iz)]) {
-        numberOfObstacleCells++;
+        safeCell[getCellIndex(xOffsetOfObstacle + ii + 1, sizeOfObstacle + ii + 2, iz)] = false;
       }
       if (cellIsInside[getCellIndex(xOffsetOfObstacle + ii + 2, sizeOfObstacle + ii + 1, iz)]) {
-        numberOfObstacleCells++;
+        safeCell[getCellIndex(xOffsetOfObstacle + ii + 2, sizeOfObstacle + ii + 1, iz)] = false;
       }
       if (cellIsInside[getCellIndex(xOffsetOfObstacle + ii + 2, sizeOfObstacle + ii + 2, iz - 1)]) {
-        numberOfObstacleCells++;
+        safeCell[getCellIndex(xOffsetOfObstacle + ii + 2, sizeOfObstacle + ii + 2, iz - 1)] = false;
       }
       if (cellIsInside[getCellIndex(xOffsetOfObstacle + ii + 3, sizeOfObstacle + ii + 2, iz)]) {
-        numberOfObstacleCells++;
+        safeCell[getCellIndex(xOffsetOfObstacle + ii + 3, sizeOfObstacle + ii + 2, iz)] = false;
       }
       if (cellIsInside[getCellIndex(xOffsetOfObstacle + ii + 2, sizeOfObstacle + ii + 3, iz)]) {
-        numberOfObstacleCells++;
+        safeCell[getCellIndex(xOffsetOfObstacle + ii + 2, sizeOfObstacle + ii + 3, iz)] = false;
       }
       if (cellIsInside[getCellIndex(xOffsetOfObstacle + ii + 2, sizeOfObstacle + ii + 2, iz + 1)]) {
-        numberOfObstacleCells++;
+        safeCell[getCellIndex(xOffsetOfObstacle + ii + 2, sizeOfObstacle + ii + 2, iz + 1)] = false;
       }
     }
 
     if (cellIsInside[getCellIndex(xOffsetOfObstacle + sizeOfObstacle - 1, 2 * sizeOfObstacle + 2, iz)]) {
-      numberOfObstacleCells++;
+      safeCell[getCellIndex(xOffsetOfObstacle + sizeOfObstacle - 1, 2 * sizeOfObstacle + 2, iz)] = false;
     }
     if (cellIsInside[getCellIndex(xOffsetOfObstacle + sizeOfObstacle + 0, 2 * sizeOfObstacle + 1, iz)]) {
-      numberOfObstacleCells++;
+      safeCell[getCellIndex(xOffsetOfObstacle + sizeOfObstacle, 2 * sizeOfObstacle + 1, iz)] = false;
     }
     if (cellIsInside[getCellIndex(xOffsetOfObstacle + sizeOfObstacle + 0, 2 * sizeOfObstacle + 2, iz - 1)]) {
-      numberOfObstacleCells++;
+      safeCell[getCellIndex(xOffsetOfObstacle + sizeOfObstacle, 2 * sizeOfObstacle + 2, iz - 1)] = false;
     }
     if (cellIsInside[getCellIndex(xOffsetOfObstacle + sizeOfObstacle + 1, 2 * sizeOfObstacle + 2, iz)]) {
-      numberOfObstacleCells++;
+      safeCell[getCellIndex(xOffsetOfObstacle + sizeOfObstacle + 1, 2 * sizeOfObstacle + 2, iz)] = false;
     }
     if (cellIsInside[getCellIndex(xOffsetOfObstacle + sizeOfObstacle + 0, 2 * sizeOfObstacle + 3, iz)]) {
-      numberOfObstacleCells++;
+      safeCell[getCellIndex(xOffsetOfObstacle + sizeOfObstacle, 2 * sizeOfObstacle + 3, iz)] = false;
     }
     if (cellIsInside[getCellIndex(xOffsetOfObstacle + sizeOfObstacle + 0, 2 * sizeOfObstacle + 2, iz + 1)]) {
-      numberOfObstacleCells++;
+      safeCell[getCellIndex(xOffsetOfObstacle + sizeOfObstacle, 2 * sizeOfObstacle + 2, iz + 1)] = false;
     }
 
     if (cellIsInside[getCellIndex(xOffsetOfObstacle + sizeOfObstacle, 2 * sizeOfObstacle + 2, iz)]) {
-      numberOfObstacleCells++;
+      safeCell[getCellIndex(xOffsetOfObstacle + sizeOfObstacle, 2 * sizeOfObstacle + 2, iz)] = false;
     }
     if (cellIsInside[getCellIndex(xOffsetOfObstacle + sizeOfObstacle + 1, 2 * sizeOfObstacle + 1, iz)]) {
-      numberOfObstacleCells++;
+      safeCell[getCellIndex(xOffsetOfObstacle + sizeOfObstacle + 1, 2 * sizeOfObstacle + 1, iz)] = false;
     }
     if (cellIsInside[getCellIndex(xOffsetOfObstacle + sizeOfObstacle + 1, 2 * sizeOfObstacle + 2, iz - 1)]) {
-      numberOfObstacleCells++;
+      safeCell[getCellIndex(xOffsetOfObstacle + sizeOfObstacle + 1, 2 * sizeOfObstacle + 2, iz - 1)] = false;
     }
     if (cellIsInside[getCellIndex(xOffsetOfObstacle + sizeOfObstacle + 2, 2 * sizeOfObstacle + 2, iz)]) {
-      numberOfObstacleCells++;
+      safeCell[getCellIndex(xOffsetOfObstacle + sizeOfObstacle + 2, 2 * sizeOfObstacle + 2, iz)] = false;
     }
     if (cellIsInside[getCellIndex(xOffsetOfObstacle + sizeOfObstacle + 1, 2 * sizeOfObstacle + 3, iz)]) {
-      numberOfObstacleCells++;
+      safeCell[getCellIndex(xOffsetOfObstacle + sizeOfObstacle + 1, 2 * sizeOfObstacle + 3, iz)] = false;
     }
     if (cellIsInside[getCellIndex(xOffsetOfObstacle + sizeOfObstacle + 1, 2 * sizeOfObstacle + 2, iz + 1)]) {
+      safeCell[getCellIndex(xOffsetOfObstacle + sizeOfObstacle + 1, 2 * sizeOfObstacle + 2, iz + 1)] = false;
+    }
+  }
+
+  int numberOfObstacleCells = 0;
+
+  for (int iCell; iCell < numberOfCells; iCell++) {
+    if(!safeCell[iCell]) {
       numberOfObstacleCells++;
     }
   }
