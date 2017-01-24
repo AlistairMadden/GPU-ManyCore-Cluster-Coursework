@@ -996,6 +996,7 @@ void setupScenario() {
 
   int numberOfObstacleCells = 0;
 
+  // Apple inspired cells
   for (int iCell = 0; iCell < numberOfCells; iCell++) {
     if(!safeCell[iCell]) {
       numberOfObstacleCells++;
@@ -1012,13 +1013,10 @@ void setupScenario() {
     if(!safeCell[iCell]) {
       unsafeCells[unsafeCellsIndex] = iCell;
       unsafeCellsIndex++;
-      std::cout << unsafeCellsIndex << std::endl;
+      std::cout << iCell << std::endl;
     }
   }
-
-  std::cout << numberOfObstacleCells << std::endl;
-  std::cout << unsafeCells << std::endl;
-
+  
   validateThatEntriesAreBounded("setupScenario()");
 }
 
