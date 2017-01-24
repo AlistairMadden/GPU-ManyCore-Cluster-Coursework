@@ -821,6 +821,7 @@ void setupScenario() {
 
 
   std::cout << numberOfCubes << std::endl;
+  sts::cout << numberOfCubes * 4 << std::endl;
 
   //
   // Insert the obstacle that forces the fluid to do something interesting.
@@ -1150,7 +1151,7 @@ int main (int argc, char *argv[]) {
   //std::cout << "Re=" << ReynoldsNumber << std::endl;
 
   //may be useful later however
-  //std::cout << "create " << numberOfCellsPerAxisX << "x" << numberOfCellsPerAxisY << "x" << numberOfCellsPerAxisZ << " grid" << std::endl;
+  std::cout << "create " << numberOfCellsPerAxisX << "x" << numberOfCellsPerAxisY << "x" << numberOfCellsPerAxisZ << " grid" << std::endl;
   setupScenario();
 
   //   dt <= C Re dx^2
