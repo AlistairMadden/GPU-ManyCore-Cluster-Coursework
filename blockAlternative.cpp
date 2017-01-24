@@ -131,6 +131,8 @@ double* ink;
 bool* cellIsInside;
 bool * safeCell;
 
+int * unsafeCells;
+
 double timeStepSize;
 
 double ReynoldsNumber = 0;
@@ -996,7 +998,19 @@ void setupScenario() {
     }
   }
 
+  unsafeCells = new int[numberOfObstacleCells];
+
+  int unsafeCellsIndex = 0;
+
+  for (int iCell; iCell < numberOfCells; iCell++) {
+    if(!safeCell[iCell]) {
+      unsafeCells[unsafeCellsIndex] = iCell;
+      unsafeCellsIndex++;
+    }
+  }
+
   std::cout << numberOfObstacleCells << std::endl;
+  std::cout << unsafeCells << std::endl;
 
   validateThatEntriesAreBounded("setupScenario()");
 }
