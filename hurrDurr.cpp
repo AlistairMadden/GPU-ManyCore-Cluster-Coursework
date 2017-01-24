@@ -822,7 +822,10 @@ void setupScenario() {
   double* anythingElse = new double[numberOfCellsMinusBoundary - (numberOfCubes * cubeDimension * cubeDimension * cubeDimension)];
   double* fullCubes = new double[numberOfCubes * cubeDimension * cubeDimension * cubeDimension];
 
-  std::cout << numberOfCubes << std::endl;
+  std::cout << "Number of Cubes: " << numberOfCubes << std::endl;
+  std::cout << "Cubes in x direction: " << numberOfCellsPerAxisX/cubeDimension << std::endl;
+  std::cout << "Cubes in y direction: " << numberOfCellsPerAxisY/cubeDimension << std::endl;
+  std::cout << "Cubes in z direction: " << numberOfCellsPerAxisZ/cubeDimension << std::endl;
 
   //
   // Insert the obstacle that forces the fluid to do something interesting.
