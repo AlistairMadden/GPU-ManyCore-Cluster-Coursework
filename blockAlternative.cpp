@@ -1039,11 +1039,53 @@ void setupScenario() {
       for (int ix = 1; ix < numberOfCellsPerAxisX + 1; ix++) {
         if(cellIsInside[getCellIndex(ix, iy, iz)]) {
           indicesInDomainNonBoundary[indicesInDomainNonBoundaryIndex] = getCellIndex(ix, iy, iz);
+          indicesInDomainNonBoundaryIndex++;
         }
       }
     }
   }
 
+/*  for (int iz=1; iz<numberOfCellsPerAxisZ+2-1; iz++) {
+    for (int iy=1; iy<numberOfCellsPerAxisY+2-1; iy++) {
+      for (int ix=2; ix<numberOfCellsPerAxisX+3-2; ix++) {
+        if (
+            cellIsInside[getCellIndex(ix-1,iy,iz)]
+            &&
+            cellIsInside[getCellIndex(ix,iy,iz)]
+            ) {
+
+        }
+      }
+    }
+  }
+
+  for (int iz=1; iz<numberOfCellsPerAxisZ+2-1; iz++) {
+    for (int iy=2; iy<numberOfCellsPerAxisY+3-2; iy++) {
+      for (int ix=1; ix<numberOfCellsPerAxisX+2-1; ix++) {
+        if (
+            cellIsInside[getCellIndex(ix,iy-1,iz)]
+            &&
+            cellIsInside[getCellIndex(ix,iy,iz)]
+            ) {
+
+        }
+      }
+    }
+  }
+
+  for (int iz=2; iz<numberOfCellsPerAxisZ+3-2; iz++) {
+    for (int iy = 1; iy < numberOfCellsPerAxisY + 2 - 1; iy++) {
+      for (int ix = 1; ix < numberOfCellsPerAxisX + 2 - 1; ix++) {
+        if (
+            cellIsInside[getCellIndex(ix, iy, iz - 1)]
+            &&
+            cellIsInside[getCellIndex(ix, iy, iz)]
+            ) {
+
+        }
+      }
+    }
+  }*/
 
   validateThatEntriesAreBounded("setupScenario()");
 }
