@@ -1,0 +1,15 @@
+-r
+/panfs/panasas1.hpc.dur.ac.uk/rhsn44/GPU-ManyCore-Cluster-Coursework/r002hs
+--data-limit-mb=500
+--stack-stitching
+--follow-child
+--itt-config=frame
+--stackwalk=offline
+--type=cpu:counters:nostack
+--type=cpu:stack
+--interval=10
+--
+./karmanBaselineO2icpcVtune
+10
+0
+800
