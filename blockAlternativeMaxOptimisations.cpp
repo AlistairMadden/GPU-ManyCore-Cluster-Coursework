@@ -665,7 +665,7 @@ int computeP() {
     // waste of memory... sue me
     double* residuals = new double[(numberOfCellsPerAxisZ+2)*(numberOfCellsPerAxisY+2)*(numberOfCellsPerAxisX+2)];
 
-    #pragma omp parallel for simd schedule(static, 16)
+    #pragma omp parallel for schedule(static, 16)
     for (int i = 0; i < indicesInDomainNonBoundarySize; i++) {
       int index = indicesInDomainNonBoundary[i];
       double residual = rhs[ index ] +
@@ -681,7 +681,7 @@ int computeP() {
           );
       #pragma omp atomic
       globalResidual += residual * residual;
-      #pragma omp critical
+
       residuals[index] = residual;
     }
 
