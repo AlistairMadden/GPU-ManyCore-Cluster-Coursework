@@ -656,7 +656,7 @@ int computeP() {
   double       firstResidual          = 1.0;
   double       previousGlobalResidual = 2.0;
   int          iterations             = 0;
-
+  std::cout << "We get here though yes?" << std::endl;
   while(
    (
     std::abs(globalResidual-previousGlobalResidual)>PPESolverThreshold
