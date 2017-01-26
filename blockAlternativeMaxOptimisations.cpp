@@ -137,17 +137,17 @@ int * indicesInDomain;
 int * indicesInDomainNonBoundary;
 
 int * leftNeighbour;
-int * leftNeighbourSize;
+int leftNeighbourSize;
 int * rightNeighbour;
-int * rightNeighbourSize;
+int rightNeighbourSize;
 int * topNeighbour;
-int * topNeighbourSize;
+int topNeighbourSize;
 int * bottomNeighbour;
-int * bottomNeighbourSize;
+int bottomNeighbourSize;
 int * frontNeighbour;
-int * frontNeighbourSize;
+int frontNeighbourSize;
 int * behindNeighbour;
-int * behindNeighbourSize;
+int behindNeighbourSize;
 
 int indicesInDomainNonBoundarySize;
 
