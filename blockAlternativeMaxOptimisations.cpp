@@ -672,7 +672,6 @@ int computeP() {
     // waste of memory... sue me
     double* residuals = new double[(numberOfCellsPerAxisZ+2)*(numberOfCellsPerAxisY+2)*(numberOfCellsPerAxisX+2)];
 
-    #pragma omp parallel for schedule(static)
     for (int i = 0; i < indicesInDomainNonBoundarySize; i++) {
       int index = indicesInDomainNonBoundary[i];
       double residual = rhs[ index ] +
@@ -686,15 +685,17 @@ int computeP() {
               - 1.0 * p[ index + (numberOfCellsPerAxisX+2)*(numberOfCellsPerAxisY+2) ]
               + 6.0 * p[ index ]
           );
-      #pragma omp atomic
+
       globalResidual += residual * residual;
 
       residuals[index] = residual;
     }
 
     // Kind of manual synchronisation
+    #pragma omp parallel for schedule(static)
     for (int i = 0; i < indicesInDomainNonBoundarySize; i++) {
       int index = indicesInDomainNonBoundary[i];
+#pragma omp atomic
       p[index] += -omega * residuals[index] / 6.0 * getH() * getH();
     }
 
@@ -1518,7 +1519,7 @@ int main (int argc, char *argv[]) {
   double tOfLastSnapshot                       = 0.0;
   int    timeStepCounter                       = 0;
   int    numberOfTimeStepsWithOnlyOneIteration = 0;
-  while (t<20.0) {
+  while (t<0.1) {
     //std::cout << "time step " << timeStepCounter << ": t=" << t << "\t dt=" << timeStepSize << "\t";
 
     setVelocityBoundaryConditions(t);
