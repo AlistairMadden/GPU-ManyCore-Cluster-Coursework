@@ -1040,13 +1040,15 @@ void setupScenario() {
       for (int ix = 1; ix < numberOfCellsPerAxisX + 1; ix++) {
         if(cellIsInside[getCellIndex(ix, iy, iz)]) {
           indicesInDomainNonBoundary[indicesInDomainNonBoundaryIndex] = getCellIndex(ix, iy, iz);
-          std::cout << getCellIndex(ix, iy, iz) << std::endl;
           indicesInDomainNonBoundaryIndex++;
         }
       }
     }
   }
 
+  for (int i = 0; i < (numberOfCellsMinusBoundary - numberOfObstacleCells); i++) {
+    std::cout << indicesInDomainNonBoundary[i] << std::endl;
+  }
 /*  for (int iz=1; iz<numberOfCellsPerAxisZ+2-1; iz++) {
     for (int iy=1; iy<numberOfCellsPerAxisY+2-1; iy++) {
       for (int ix=2; ix<numberOfCellsPerAxisX+3-2; ix++) {
