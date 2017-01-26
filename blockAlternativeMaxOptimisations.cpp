@@ -681,7 +681,7 @@ int computeP() {
           );
       #pragma omp atomic
       globalResidual += residual * residual;
-      #pragma omp atomic
+      #pragma omp critical
       residuals[index] = residual;
     }
 
