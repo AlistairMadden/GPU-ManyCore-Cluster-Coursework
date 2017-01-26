@@ -135,19 +135,12 @@ int * unsafeCells;
 int * safeCells;
 int * indicesInDomain;
 int * indicesInDomainNonBoundary;
-
 int * leftNeighbour;
-int leftNeighbourSize;
 int * rightNeighbour;
-int rightNeighbourSize;
 int * topNeighbour;
-int topNeighbourSize;
 int * bottomNeighbour;
-int bottomNeighbourSize;
 int * frontNeighbour;
-int frontNeighbourSize;
 int * behindNeighbour;
-int behindNeighbourSize;
 
 int indicesInDomainNonBoundarySize;
 
