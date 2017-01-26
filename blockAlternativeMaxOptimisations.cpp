@@ -1056,6 +1056,10 @@ void setupScenario() {
     }
   }
 
+  for (int i = 0; i < indicesInDomainNonBoundarySize; i++) {
+    std::cout << indicesInDomainNonBoundary[i] << std::endl;
+  }
+
 /*  int leftNeighbourIndex = 0;
   int rightNeighbourIndex = 0;
   int bottomNeighbourIndex = 0;
