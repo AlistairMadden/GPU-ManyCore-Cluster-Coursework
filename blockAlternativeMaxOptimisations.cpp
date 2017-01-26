@@ -90,6 +90,7 @@ on YouTube, e.g.
 #include <sstream>
 #include <fstream>
 #include <cmath>
+#include <omp.h>
 
 
 /**
@@ -674,7 +675,6 @@ int computeP() {
     #pragma omp parallel for schedule(static)
     for (int i = 0; i < indicesInDomainNonBoundarySize; i++) {
       int index = indicesInDomainNonBoundary[i];
-      std::cout << index << std::endl;
       double residual = rhs[ index ] +
           1.0/getH()/getH()*
           (
