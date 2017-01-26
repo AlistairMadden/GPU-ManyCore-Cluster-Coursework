@@ -607,13 +607,13 @@ void setPressureBoundaryConditions() {
           if ( !cellIsInside[getCellIndex(ix,iy-1,iz)] ) { // bottom neighbour
             p[getCellIndex(ix,iy-1,iz)]     = p[getCellIndex(ix,iy,iz)];
           }
-          if ( !cellIsInside[getCellIndex(ix,iy+1,iz)] ) { // right neighbour
+          if ( !cellIsInside[getCellIndex(ix,iy+1,iz)] ) { // top neighbour
             p[getCellIndex(ix,iy+1,iz)]     = p[getCellIndex(ix,iy,iz)];
           }
           if ( !cellIsInside[getCellIndex(ix,iy,iz-1)] ) { // front neighbour
             p[getCellIndex(ix,iy,iz-1)]     = p[getCellIndex(ix,iy,iz)];
           }
-          if ( !cellIsInside[getCellIndex(ix,iy,iz+1)] ) { // right neighbour
+          if ( !cellIsInside[getCellIndex(ix,iy,iz+1)] ) { // behind neighbour
             p[getCellIndex(ix,iy,iz+1)]     = p[getCellIndex(ix,iy,iz)];
           }
         }
@@ -1153,7 +1153,7 @@ int main (int argc, char *argv[]) {
   double tOfLastSnapshot                       = 0.0;
   int    timeStepCounter                       = 0;
   int    numberOfTimeStepsWithOnlyOneIteration = 0;
-  while (t<20.0) {
+  while (t<0.1) {
     //std::cout << "time step " << timeStepCounter << ": t=" << t << "\t dt=" << timeStepSize << "\t";
 
     setVelocityBoundaryConditions(t);
