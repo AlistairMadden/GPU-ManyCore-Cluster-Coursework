@@ -1060,7 +1060,7 @@ void setupScenario() {
     }
   }
 
-  int leftNeighbourIndex = 0;
+/*  int leftNeighbourIndex = 0;
   int rightNeighbourIndex = 0;
   int bottomNeighbourIndex = 0;
   int topNeighbourIndex = 0;
@@ -1148,7 +1148,7 @@ void setupScenario() {
         }
       }
     }
-  }
+  }*/
 
 /*  for (int iz=1; iz<numberOfCellsPerAxisZ+2-1; iz++) {
     for (int iy=1; iy<numberOfCellsPerAxisY+2-1; iy++) {
