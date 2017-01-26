@@ -135,6 +135,12 @@ int * unsafeCells;
 int * safeCells;
 int * indicesInDomain;
 int * indicesInDomainNonBoundary;
+int * leftNeighbour;
+int * rightNeighbour;
+int * topNeighbour;
+int * bottomNeighbour;
+int * frontNeighbour;
+int * behindNeighbour;
 
 int indicesInDomainNonBoundarySize;
 
@@ -1040,6 +1046,89 @@ void setupScenario() {
         if(cellIsInside[getCellIndex(ix, iy, iz)]) {
           indicesInDomainNonBoundary[indicesInDomainNonBoundaryIndex] = getCellIndex(ix, iy, iz);
           indicesInDomainNonBoundaryIndex++;
+        }
+      }
+    }
+  }
+
+  int leftNeighbourIndex = 0;
+  int rightNeighbourIndex = 0;
+  int bottomNeighbourIndex = 0;
+  int topNeighbourIndex = 0;
+  int frontNeighbourIndex = 0;
+  int behindNeighbourIndex = 0;
+
+  // Cells around obstacle
+  for (int iz = 1; iz < numberOfCellsPerAxisZ + 1; iz++) {
+    for (int iy = 1; iy < numberOfCellsPerAxisY + 1; iy++) {
+      for (int ix = 2; ix < numberOfCellsPerAxisX + 1; ix++) {
+        if (cellIsInside[getCellIndex(ix, iy, iz)]) {
+          if (!cellIsInside[getCellIndex(ix - 1, iy, iz)]) { // left neighbour
+            leftNeighbourIndex++;
+          }
+          if (!cellIsInside[getCellIndex(ix + 1, iy, iz)]) { // right neighbour
+            rightNeighbourIndex++;
+          }
+          if (!cellIsInside[getCellIndex(ix, iy - 1, iz)]) { // bottom neighbour
+            bottomNeighbourIndex++;
+          }
+          if (!cellIsInside[getCellIndex(ix, iy + 1, iz)]) { // top neighbour
+            topNeighbourIndex++;
+          }
+          if (!cellIsInside[getCellIndex(ix, iy, iz - 1)]) { // front neighbour
+            frontNeighbourIndex++;
+          }
+          if (!cellIsInside[getCellIndex(ix, iy, iz + 1)]) { // behind neighbour
+            behindNeighbourIndex++;
+          }
+        }
+      }
+    }
+  }
+
+  leftNeighbour = new int[leftNeighbourIndex + 1];
+  rightNeighbour = new int[rightNeighbourIndex + 1];
+  bottomNeighbour = new int[bottomNeighbourIndex + 1];
+  topNeighbour = new int[topNeighbourIndex + 1];
+  frontNeighbour = new int[frontNeighbourIndex + 1];
+  behindNeighbour = new int[behindNeighbourIndex + 1];
+
+  leftNeighbourIndex = 0;
+  rightNeighbourIndex = 0;
+  bottomNeighbourIndex = 0;
+  topNeighbourIndex = 0;
+  frontNeighbourIndex = 0;
+  behindNeighbourIndex = 0;
+
+  // Cells around obstacle
+  for (int iz = 1; iz < numberOfCellsPerAxisZ + 1; iz++) {
+    for (int iy = 1; iy < numberOfCellsPerAxisY + 1; iy++) {
+      for (int ix = 2; ix < numberOfCellsPerAxisX + 1; ix++) {
+        if (cellIsInside[getCellIndex(ix, iy, iz)]) {
+          if (!cellIsInside[getCellIndex(ix - 1, iy, iz)]) { // left neighbour
+            leftNeighbour[leftNeighbourIndex] = getCellIndex(ix - 1, iy, iz);
+            leftNeighbourIndex++;
+          }
+          if (!cellIsInside[getCellIndex(ix + 1, iy, iz)]) { // right neighbour
+            rightNeighbour[rightNeighbourIndex] = getCellIndex(ix + 1, iy, iz);
+            rightNeighbourIndex++;
+          }
+          if (!cellIsInside[getCellIndex(ix, iy - 1, iz)]) { // bottom neighbour
+            bottomNeighbour[bottomNeighbourIndex] = getCellIndex(ix, iy - 1, iz);
+            bottomNeighbourIndex++;
+          }
+          if (!cellIsInside[getCellIndex(ix, iy + 1, iz)]) { // top neighbour
+            topNeighbour[topNeighbourIndex] = getCellIndex(ix, iy + 1, iz);
+            topNeighbourIndex++;
+          }
+          if (!cellIsInside[getCellIndex(ix, iy, iz - 1)]) { // front neighbour
+            frontNeighbour[frontNeighbourIndex] = getCellIndex(ix, iy, iz - 1);
+            frontNeighbourIndex++;
+          }
+          if (!cellIsInside[getCellIndex(ix, iy, iz + 1)]) { // behind neighbour
+            behindNeighbour[behindNeighbourIndex] = getCellIndex(ix, iy, iz + 1);
+            behindNeighbourIndex++;
+          }
         }
       }
     }
