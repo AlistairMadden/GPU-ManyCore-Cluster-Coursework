@@ -691,9 +691,13 @@ int computeP() {
       residuals[index] = residual;
     }
 
+    int index;
+
     // Kind of manual synchronisation
+    #pragma omp parallel for schedule(static) private(index)
     for (int i = 0; i < indicesInDomainNonBoundarySize; i++) {
-      int index = indicesInDomainNonBoundary[i];
+      index = indicesInDomainNonBoundary[i];
+      #pragma omp atomic
       p[index] += -omega * residuals[index] / 6.0 * getH() * getH();
     }
 
