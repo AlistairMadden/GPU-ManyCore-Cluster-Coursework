@@ -679,12 +679,12 @@ int computeP() {
               - 1.0 * p[ index + (numberOfCellsPerAxisX+2)*(numberOfCellsPerAxisY+2) ]
               + 6.0 * p[ index ]
           );
+      #pragma omp atomic
       globalResidual += residual * residual;
       residuals[index] = residual;
     }
 
     // Kind of manual synchronisation
-    #pragma omp parallel for simd schedule(static, 16)
     for (int i = 0; i < indicesInDomainNonBoundarySize; i++) {
       int index = indicesInDomainNonBoundary[i];
       p[index] += -omega * residuals[index] / 6.0 * getH() * getH();
