@@ -1040,7 +1040,7 @@ void setupScenario() {
       for (int ix = 1; ix < numberOfCellsPerAxisX + 1; ix++) {
         if(cellIsInside[getCellIndex(ix, iy, iz)]) {
           indicesInDomainNonBoundary[indicesInDomainNonBoundaryIndex] = getCellIndex(ix, iy, iz);
-          cout << getCellIndex(ix, iy, iz);
+          std::cout << getCellIndex(ix, iy, iz) << std::endl;
           indicesInDomainNonBoundaryIndex++;
         }
       }
