@@ -672,9 +672,8 @@ int computeP() {
     // waste of memory... sue me
     double* residuals = new double[(numberOfCellsPerAxisZ+2)*(numberOfCellsPerAxisY+2)*(numberOfCellsPerAxisX+2)];
 
-#pragma omp parallel for
+    #pragma omp parallel for
     for (int i = 0; i < indicesInDomainNonBoundarySize; i++) {
-      std::cout << "We get here though yes?" << std::endl;
       int index = indicesInDomainNonBoundary[i];
       double residual = rhs[ index ] +
           1.0/getH()/getH()*
@@ -688,7 +687,7 @@ int computeP() {
               + 6.0 * p[ index ]
           );
 
-#pragma omp atomic update
+      #pragma omp atomic update
       globalResidual += residual * residual;
 
       residuals[index] = residual;
@@ -696,10 +695,9 @@ int computeP() {
 
 
     // Kind of manual synchronisation
-#pragma omp parallel for
+    #pragma omp parallel for
     for (int i = 0; i < indicesInDomainNonBoundarySize; i++) {
       int index = indicesInDomainNonBoundary[i];
-#pragma omp atomic update
       p[index] += -omega * residuals[index] / 6.0 * getH() * getH();
     }
 
