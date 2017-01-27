@@ -2,9 +2,17 @@
 // Created by Alistair on 27/01/2017.
 //
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <cmath>
 #include <omp.h>
 #define N 1000
 #define CHUNKSIZE 100
+
 
 main(int argc, char *argv[]) {
 
