@@ -686,8 +686,7 @@ int computeP() {
               - 1.0 * p[ index + (numberOfCellsPerAxisX+2)*(numberOfCellsPerAxisY+2) ]
               + 6.0 * p[ index ]
           );
-
-      #pragma omp atomic update
+      
       globalResidual += residual * residual;
 
       residuals[index] = residual;
