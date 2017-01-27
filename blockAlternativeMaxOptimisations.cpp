@@ -692,12 +692,13 @@ int computeP() {
       residuals[index] = residual;
     }
 
-    int index;
 
     // Kind of manual synchronisation
+#pragma omp parallel for
     for (int i = 0; i < indicesInDomainNonBoundarySize; i++) {
-      index = indicesInDomainNonBoundary[i];
-      p[index] += -omega * residuals[index] / 6.0 * getH() * getH();
+      int index = indicesInDomainNonBoundary[i];
+      std::cout << index << std::endl;
+      //p[index] += -omega * residuals[index] / 6.0 * getH() * getH();
     }
 
 
