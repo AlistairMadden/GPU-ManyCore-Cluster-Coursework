@@ -91,6 +91,7 @@ on YouTube, e.g.
 #include <fstream>
 #include <cmath>
 #include <omp.h>
+#include <algorithm>
 
 
 /**
@@ -672,6 +673,7 @@ int computeP() {
     double* residuals = new double[(numberOfCellsPerAxisZ+2)*(numberOfCellsPerAxisY+2)*(numberOfCellsPerAxisX+2)];
 
     for (int i = 0; i < indicesInDomainNonBoundarySize; i++) {
+      std::cout << "We get here though yes?" << std::endl;
       int index = indicesInDomainNonBoundary[i];
       double residual = rhs[ index ] +
           1.0/getH()/getH()*
@@ -1054,7 +1056,11 @@ void setupScenario() {
   }
 
   for (int i = 0; i < indicesInDomainNonBoundarySize; i++) {
-    std::cout << indicesInDomainNonBoundary[i] << std::endl;
+    for (int j = 0; j < indicesInDomainNonBoundarySize; j++) {
+      if (i != j && indicesInDomainNonBoundary[i] == indicesInDomainNonBoundary[j]) {
+        std::cout << i << " " << j << std::endl;
+      }
+    }
   }
 
 /*  int leftNeighbourIndex = 0;
