@@ -671,7 +671,7 @@ int computeP() {
     globalResidual         = 0.0;
     // waste of memory... sue me
     double* residuals = new double[(numberOfCellsPerAxisZ+2)*(numberOfCellsPerAxisY+2)*(numberOfCellsPerAxisX+2)];
-    
+
     for (int i = 0; i < indicesInDomainNonBoundarySize; i++) {
       int index = indicesInDomainNonBoundary[i];
       double residual = rhs[ index ] +
@@ -696,7 +696,7 @@ int computeP() {
     #pragma omp parallel for
     for (int i = 0; i < indicesInDomainNonBoundarySize; i++) {
       int index = indicesInDomainNonBoundary[i];
-      p[index] += -omega * residuals[index] / 6.0 * getH() * getH();
+      //p[index] += -omega * residuals[index] / 6.0 * getH() * getH();
     }
 
 
