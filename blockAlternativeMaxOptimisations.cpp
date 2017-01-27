@@ -697,8 +697,8 @@ int computeP() {
 #pragma omp parallel for
     for (int i = 0; i < indicesInDomainNonBoundarySize; i++) {
       int index = indicesInDomainNonBoundary[i];
-      std::cout << index << std::endl;
-      //p[index] += -omega * residuals[index] / 6.0 * getH() * getH();
+#pragma omp atomic update
+      p[index] += -omega * residuals[index] / 6.0 * getH() * getH();
     }
 
 
