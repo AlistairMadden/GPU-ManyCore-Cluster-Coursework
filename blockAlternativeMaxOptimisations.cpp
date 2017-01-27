@@ -650,7 +650,6 @@ int computeP() {
   double       firstResidual          = 1.0;
   double       previousGlobalResidual = 2.0;
   int          iterations             = 0;
-  std::cout << "We get here though yes?" << std::endl;
   while(
    (
     std::abs(globalResidual-previousGlobalResidual)>PPESolverThreshold
@@ -694,10 +693,8 @@ int computeP() {
     int index;
 
     // Kind of manual synchronisation
-    #pragma omp parallel for schedule(static) private(index)
     for (int i = 0; i < indicesInDomainNonBoundarySize; i++) {
       index = indicesInDomainNonBoundary[i];
-      #pragma omp atomic
       p[index] += -omega * residuals[index] / 6.0 * getH() * getH();
     }
 
